@@ -158,7 +158,7 @@
         <div class="rule"><h3>Corp cadences</h3><p>Corp Material Due Dates are formal checkpoints. Live Delivery marks the refreshed Live read before the forum.</p></div>
         <div class="rule"><h3>Corp replacement rule</h3><p>On MBR weeks, there is no WBR.</p></div>
         <div class="rule"><h3>Jamie WBR</h3><p>Firm commitment. Live will meet required WBR deadlines and maintain enterprise pre-read discipline.</p></div>
-        <div class="rule"><h3></h3><p>Pre-read obligation is firm. The refreshed Live delivery model needs alignment as long as it lands before the approved pre-read lock.</p></div>
+        <div class="rule"><h3>Jamie MBR</h3><p>Pre-read obligation is firm. The refreshed Live delivery model needs alignment as long as it lands before the approved pre-read lock.</p></div>
         <div class="rule"><h3>MOSH</h3><p>Live delivery / refresh model needs alignment. Ideal target is 48 hours before the meeting; otherwise Live may miss pre-read and share after the call.</p></div>
         <div class="rule"><h3>Product & Design</h3><p>Prep cycle is owned by Live Product and remains editable until the operating model is finalized.</p></div>
       </div>
@@ -201,7 +201,7 @@
         ]
       },
       jamieWbr: {
-        title:'Jamie WBR', type:'Corp cadence', owner:'Enterprise Cadences / Live S&O input', mode:'Disseminate', status:'Firm',
+        title:'Jamie WBR', type:'Corp cadence', owner:'Corp Cadences / Live S&O input', mode:'Disseminate', status:'Firm',
         purpose:'Weekly Corp business performance review where Live contributes the required performance update.',
         note:'Live follows the weekly Corp timing.',
         weeks:[
@@ -222,7 +222,7 @@
         ]
       },
       jamieMbr: {
-        title:'', type:'Corp cadence', owner:'Enterprise Cadences / Live S&O input', mode:'Disseminate', status:'Needs Alignment',
+        title:'Jamie MBR', type:'Corp cadence', owner:'Corp Cadences / Live S&O input', mode:'Disseminate', status:'Needs Alignment',
         purpose:'Monthly Corp business review where Live provides the required performance update and priority issues.',
         note:'Live will hit the Corp pre-read lock. Any post-lock refresh path needs alignment.',
         weeks:[
@@ -236,14 +236,14 @@
           {label:'Week 2 — Monthly Business Performance', days:{
             Mon:[{t:'Live refresh path', d:'If aligned.', c:'align'}],
             Tue:[],
-            Wed:[{t:'Meeting', d:'.', c:'meeting'}],
+            Wed:[{t:'Meeting', d:'Jamie MBR.', c:'meeting'}],
             Thu:[{t:'Actions and follow-ups', d:'Owners and next steps confirmed.', c:'live'}],
             Fri:[]
           }}
         ]
       },
       mosh: {
-        title:'MOSH / ', type:'Corp / GMX cadence', owner:'GMX BizOps / Enterprise Cadences / Live S&O input', mode:'Decide', status:'Needs Alignment',
+        title:'MOSH / Jamie MBR', type:'Corp / GMX cadence', owner:'GMX BizOps / Corp Cadences / Live S&O input', mode:'Decide', status:'Needs Alignment',
         purpose:'Combined Corp executive review cycle where MOSH and Jamie MBR replace Jamie WBR in the meeting week.',
         note:'Live Delivery Date needs alignment. Ideal target is 48 hours before MOSH; otherwise Live may miss pre-read and share after the call.',
         weeks:[
@@ -289,7 +289,7 @@
       {key:'jamieWbr', title:'Jamie WBR', mode:'Disseminate', bubble:'dis', type:'Corp cadence', purpose:'Weekly Corp business performance review.'},
       {key:'liveMbr', title:'Live MBR', mode:'Do', bubble:'do', type:'Live-only cadence', purpose:'Monthly Live review for scorecard readout, performance diagnosis, and priority actions.'},
       {key:'jamieMbr', title:'Jamie MBR', mode:'Disseminate', bubble:'dis', type:'Corp cadence', purpose:'Monthly Corp business review. Pre-read timing is firm; post-lock refresh path needs alignment.'},
-      {key:'mosh', title:'MOSH', mode:'Decide', bubble:'decide', type:'Corp / GMX cadence', purpose:'Executive review cycle where MOSH and Jamie MBR replace Jamie WBR in the meeting week.'},
+      {key:'mosh', title:'MOSH / Jamie MBR', mode:'Decide', bubble:'decide', type:'Corp / GMX cadence', purpose:'Executive review cycle where MOSH and Jamie MBR replace Jamie WBR in the meeting week.'},
       {key:'productDesign', title:'Product & Design', mode:'Debate', bubble:'debate', type:'Product-owned cadence', purpose:'Product-owned cadence. Prep model needs alignment with Live Product.'}
     ];
 
@@ -297,115 +297,86 @@
       June:{year:2026, monthIndex:5, days:30}, July:{year:2026, monthIndex:6, days:31}, August:{year:2026, monthIndex:7, days:31}, September:{year:2026, monthIndex:8, days:30}, October:{year:2026, monthIndex:9, days:31}, November:{year:2026, monthIndex:10, days:30}, December:{year:2026, monthIndex:11, days:31}
     };
 
-    // Event types: core, live, align, meeting, holiday, risk. Dates use source calendar where clear; Live Delivery entries are target refresh dates for alignment.
-    const calendarData = {
+    // Event types: core, live, align, meeting, holiday, risk.
+    // Base events come from the GMX / Corp cadence calendar where clear.
+    // Weekly WBR and Live Global WBR operating rhythms are generated below so the calendar stays editable.
+    const baseCalendarData = {
       June:[
-        e(3,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep model needs final alignment.'),
-        e(4,'Final BoD Materials Due','core','BoD','Firm','Corp material due date from GMX calendar.','Not a Live delivery item.'),
-        e(10,'MOSH Lite Materials Due','core','MOSH Lite','Firm','Corp material due date from GMX calendar.','Live refresh rule not applied to MOSH Lite.'),
-        e(10,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh model needs alignment before pre-read lock.'),
-        e(15,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
-        e(16,'MOSH Lite','meeting','MOSH Lite','Firm','Meeting date from GMX calendar.','Includes goal review.'),
-        e(17,'BoD','meeting','BoD','Firm','Meeting date from GMX calendar.','Corp enterprise cadence.'),
-        e(18,'BoD','meeting','BoD','Firm','Meeting date from GMX calendar.','Corp enterprise cadence.'),
-        e(16,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read before MBR.','Confirm final pre-read lock with Enterprise Cadences.'),
+        e(3,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Product & Design prep model remains with Live Product.'),
+        e(10,'MOSH Lite Materials Due','core','MOSH Lite','Firm','Corp material due date from GMX calendar.','Live involvement retained until confirmed otherwise.'),
+        e(10,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Corp pre-read prep concludes at the pre-read lock.'),
+        e(15,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Product & Design prep model remains with Live Product.'),
+        e(16,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read 48 hours before Jamie MBR.','Separate from Corp pre-read materials; refresh model needs alignment.'),
+        e(16,'MOSH Lite','meeting','MOSH Lite','Firm','Meeting date from GMX calendar.','Live involvement retained until confirmed otherwise.'),
         e(18,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Corp pre-read obligation is firm.'),
         e(19,'Juneteenth','holiday','Holiday','Firm','Holiday from GMX calendar.','Capacity constraint.'),
-        e(25,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh timing needs alignment.'),
-        e(26,'Live Delivery — CEO Experience Review','live','CEO Experience Review','Needs Alignment','Target date for refreshed Live read before the Live-specific review.','Confirm final readout timing with the review owner.'),
+        e(26,'Live Delivery — CEO Experience','live','CEO Experience Review','Needs Alignment','Target date for refreshed Live read 48 hours before the Live-specific review.','Confirm final readout timing with the review owner.'),
         e(30,'CEO Experience Review — Live','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Live-specific review.')
       ],
       July:[
         e(3,'Independence Day Observed','holiday','Holiday','Firm','Holiday from GMX calendar.','Capacity constraint.'),
-        e(6,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
-        e(9,'MOSH Materials + Goal Slides Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Live delivery target is 48 hours before the meeting; timing needs alignment.'),
-        e(10,'Goal Review','meeting','Goal Review','Firm','Meeting date from GMX calendar.','Corp GMX review.'),
-        e(10,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Confirm whether this is integrated into the pre-read or shared after the call.'),
+        e(6,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Product & Design prep model remains with Live Product.'),
+        e(9,'MOSH Materials + Goal Slides Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Materials and goals due before the MOSH meeting week.'),
+        e(10,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Separate target because MOSH deep-dive content may be net new.'),
         e(14,'MOSH','meeting','MOSH','Firm','Meeting date from GMX calendar.','Live delivery timing needs alignment.'),
-        e(14,'CEO Experience Review — Magi','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Non-Live review.'),
-        e(22,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh timing needs alignment.'),
-        e(28,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read before MBR.','Confirm final pre-read lock with Enterprise Cadences.'),
+        e(22,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Corp pre-read prep concludes at the pre-read lock.'),
+        e(28,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read 48 hours before Jamie MBR.','Separate from Corp pre-read materials; refresh model needs alignment.'),
         e(30,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Corp pre-read obligation is firm.')
       ],
       August:[
-        e(3,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
-        e(5,'LR Design Review','meeting','Long Range Design','Firm','Meeting date from GMX calendar.','Corp cadence.'),
-        e(12,'BoD GMXLT Kickoff','meeting','BoD','Firm','Meeting date from GMX calendar.','Business performance kickoff.'),
-        e(12,'MOSH Materials Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Live delivery target is 48 hours before the meeting; timing needs alignment.'),
-        e(12,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh timing needs alignment.'),
-        e(14,'Goal Review','meeting','Goal Review','Firm','Meeting date from GMX calendar.','Corp GMX review.'),
-        e(17,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
-        e(14,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Confirm whether this is integrated into the pre-read or shared after the call.'),
+        e(3,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Product & Design prep model remains with Live Product.'),
+        e(12,'MOSH Materials Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Materials due before the MOSH meeting.'),
+        e(12,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Corp pre-read prep concludes at the pre-read lock.'),
+        e(14,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Separate target because MOSH deep-dive content may be net new.'),
+        e(17,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Product & Design prep model remains with Live Product.'),
         e(18,'MOSH','meeting','MOSH','Firm','Meeting date from GMX calendar.','Live delivery timing needs alignment.'),
-        e(18,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read before MBR.','Confirm final pre-read lock with Enterprise Cadences.'),
+        e(18,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read 48 hours before Jamie MBR.','Separate from Corp pre-read materials; refresh model needs alignment.'),
         e(20,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Corp pre-read obligation is firm.'),
-        e(21,'Live Delivery — CEO Experience Review','live','CEO Experience Review','Needs Alignment','Target date for refreshed Live read before the Live-specific review.','Confirm final readout timing with the review owner.'),
-        e(25,'CEO Experience Review — Live','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Live-specific review.'),
-        e(26,'BoD Materials Due','core','BoD','Firm','Corp material due date from GMX calendar.','Business performance.'),
-        e(27,'BoD GMXLT Content Review','meeting','BoD','Firm','Meeting date from GMX calendar.','Jordan content review.'),
-        e(27,'LR Design Review','meeting','Long Range Design','Firm','Meeting date from GMX calendar.','Corp cadence.')
+        e(21,'Live Delivery — CEO Experience','live','CEO Experience Review','Needs Alignment','Target date for refreshed Live read 48 hours before the Live-specific review.','Confirm final readout timing with the review owner.'),
+        e(25,'CEO Experience Review — Live','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Live-specific review.')
       ],
       September:[
-        e(4,'CEO Experience Review Prep — Magi','meeting','CEO Experience Review','Firm','Meeting prep from GMX calendar.','Non-Live review.'),
         e(7,'Labor Day','holiday','Holiday','Firm','Holiday from GMX calendar.','Capacity constraint.'),
-        e(9,'BoD Strategy Final Review','meeting','BoD','Firm','Meeting date from GMX calendar.','Jordan review.'),
-        e(9,'CEO Experience Review — Magi','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Non-Live review.'),
-        e(9,'Final BoD Materials Due','core','BoD','Firm','Corp material due date from GMX calendar.','Corp enterprise deadline.'),
-        e(16,'BoD Materials Locked','core','BoD','Firm','Lock date from GMX calendar.','Corp enterprise lock.'),
-        e(16,'MOSH Materials Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Live delivery target is 48 hours before the meeting; timing needs alignment.'),
-        e(17,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
-        e(18,'Goal Review','meeting','Goal Review','Firm','Meeting date from GMX calendar.','Corp GMX review.'),
-        e(18,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh timing needs alignment.'),
-        e(21,'CEO Experience Review — Agentic','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Non-Live review.'),
-        e(18,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Confirm whether this is integrated into the pre-read or shared after the call.'),
+        e(16,'MOSH Materials Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Materials due before the MOSH meeting.'),
+        e(17,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Product & Design prep model remains with Live Product.'),
+        e(18,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Corp pre-read prep concludes at the pre-read lock.'),
+        e(18,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Separate target because MOSH deep-dive content may be net new.'),
         e(22,'MOSH','meeting','MOSH','Firm','Meeting date from GMX calendar.','Live delivery timing needs alignment.'),
-        e(23,'BoD','meeting','BoD','Firm','Meeting date from GMX calendar.','Corp enterprise cadence.'),
-        e(24,'BoD','meeting','BoD','Firm','Meeting date from GMX calendar.','Corp enterprise cadence.'),
-        e(22,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read before MBR.','Confirm final pre-read lock with Enterprise Cadences.'),
+        e(22,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read 48 hours before Jamie MBR.','Separate from Corp pre-read materials; refresh model needs alignment.'),
         e(24,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Corp pre-read obligation is firm.'),
-        e(24,'LR Design Review','meeting','Long Range Design','Firm','Meeting date from GMX calendar.','Corp cadence.'),
         e(29,'MOSH Lite — Live / C2C','meeting','MOSH Lite','Firm','Meeting date from GMX calendar.','Live-specific MOSH Lite content.'),
-        e(30,'MOSH Lite — Shipping / Tariffs / Financial Services / Ads','meeting','MOSH Lite','Firm','Meeting date from GMX calendar.','GMX review.')
+        e(30,'MOSH Lite — Shipping / Tariffs / Financial Services / Ads','meeting','MOSH Lite','Firm','Meeting date from GMX calendar.','Retain until Live involvement is clarified.')
       ],
       October:[
-        e(14,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
-        e(16,'Live Delivery — CEO Experience Review','live','CEO Experience Review','Needs Alignment','Target date for refreshed Live read before the Live-specific review.','Confirm final readout timing with the review owner.'),
+        e(14,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Product & Design prep model remains with Live Product.'),
+        e(16,'Live Delivery — CEO Experience','live','CEO Experience Review','Needs Alignment','Target date for refreshed Live read 48 hours before the Live-specific review.','Confirm final readout timing with the review owner.'),
         e(20,'CEO Experience Review — Live','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Live-specific review.'),
-        e(21,'MOSH Materials Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Live delivery target is 48 hours before the meeting; timing needs alignment.'),
-        e(23,'Goal Review','meeting','Goal Review','Firm','Meeting date from GMX calendar.','Corp GMX review.'),
-        e(23,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh timing needs alignment.'),
-        e(23,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Confirm whether this is integrated into the pre-read or shared after the call.'),
+        e(21,'MOSH Materials Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Materials due before the MOSH meeting.'),
+        e(23,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Corp pre-read prep concludes at the pre-read lock.'),
+        e(23,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Separate target because MOSH deep-dive content may be net new.'),
         e(27,'MOSH','meeting','MOSH','Firm','Meeting date from GMX calendar.','Live delivery timing needs alignment.'),
-        e(28,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
-        e(27,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read before MBR.','Confirm final pre-read lock with Enterprise Cadences.'),
-        e(29,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Corp pre-read obligation is firm.'),
-        e(29,'LR Design Review','meeting','Long Range Design','Firm','Meeting date from GMX calendar.','Corp cadence.')
+        e(27,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read 48 hours before Jamie MBR.','Separate from Corp pre-read materials; refresh model needs alignment.'),
+        e(28,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Product & Design prep model remains with Live Product.'),
+        e(29,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Corp pre-read obligation is firm.')
       ],
       November:[
-        e(4,'CEO Experience Review — Magi','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Non-Live review.'),
-        e(4,'BoD Kickoff (Dec)','meeting','BoD','Firm','Meeting date from GMX calendar.','Corp enterprise cadence.'),
-        e(4,'BoD Materials Ask to Teams','core','BoD','Firm','Corp request date from GMX calendar.','Team ask milestone.'),
-        e(12,'MOSH Materials Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Live delivery target is 48 hours before the meeting; timing needs alignment.'),
-        e(12,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh timing needs alignment.'),
-        e(13,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Confirm whether this is integrated into the pre-read or shared after the call.'),
+        e(12,'MOSH Materials Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Materials due before the MOSH meeting.'),
+        e(12,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Corp pre-read prep concludes at the pre-read lock.'),
+        e(13,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Separate target because MOSH deep-dive content may be net new.'),
+        e(16,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read 48 hours before Jamie MBR.','Separate from Corp pre-read materials; refresh model needs alignment.'),
         e(17,'MOSH','meeting','MOSH','Firm','Meeting date from GMX calendar.','Live delivery timing needs alignment.'),
         e(18,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Corp pre-read obligation is firm.'),
-        e(19,'BOD GMXLT Kickoff — Dec hold','meeting','BoD','Needs Alignment','Calendar hold; needs TBC.','December kickoff hold.'),
-        e(23,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
-        e(24,'LR Design Review','meeting','Long Range Design','Firm','Meeting date from GMX calendar.','Corp cadence.'),
-        e(25,'HOLD: BoD GMXLT Review with Jordan','meeting','BoD','Needs Alignment','Hold from GMX calendar.','December review hold.'),
+        e(23,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Product & Design prep model remains with Live Product.'),
         e(26,'Thanksgiving','holiday','Holiday','Firm','Holiday from GMX calendar.','Capacity constraint.'),
-        e(27,'Thanksgiving observed','holiday','Holiday','Firm','Holiday from GMX calendar.','Capacity constraint.'),
+        e(27,'Thanksgiving observed','holiday','Holiday','Firm','Holiday from GMX calendar.','Capacity constraint.')
       ],
       December:[
-        e(2,'MOSH Materials Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Live delivery target is 48 hours before the meeting; timing needs alignment.'),
-        e(2,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh timing needs alignment.'),
-        e(7,'BoD call','meeting','BoD','Firm','Meeting date from GMX calendar.','Corp enterprise cadence.'),
-        e(4,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Confirm whether this is integrated into the pre-read or shared after the call.'),
+        e(2,'MOSH Materials Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Materials due before the MOSH meeting.'),
+        e(2,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Corp pre-read prep concludes at the pre-read lock.'),
+        e(4,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Separate target because MOSH deep-dive content may be net new.'),
         e(8,'MOSH','meeting','MOSH','Firm','Meeting date from GMX calendar.','Live delivery timing needs alignment.'),
-        e(8,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read before MBR.','Confirm final pre-read lock with Enterprise Cadences.'),
+        e(8,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read 48 hours before Jamie MBR.','Separate from Corp pre-read materials; refresh model needs alignment.'),
         e(10,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Corp pre-read obligation is firm.'),
-        e(18,'BOD Materials Due','core','BoD','Firm','Corp material due date from GMX calendar.','Corp enterprise deadline.'),
         e(20,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
         e(21,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
         e(22,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
@@ -414,10 +385,56 @@
         e(25,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
         e(28,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
         e(29,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
-        e(30,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
+        e(30,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.')
       ]
     };
     function e(day,title,type,cadence,status,desc,implication){return {day,title,type,cadence,status,desc,implication}}
+
+    function dateFor(month, day){const meta=monthMeta[month]; return new Date(meta.year, meta.monthIndex, day)}
+    function weekKey(date){const d=new Date(date); d.setHours(0,0,0,0); d.setDate(d.getDate()-d.getDay()); return d.toISOString().slice(0,10)}
+    function firstTuesdayAfterMonthClose(month){
+      const meta=monthMeta[month];
+      const close=new Date(meta.year, meta.monthIndex, 0);
+      const first=new Date(meta.year, meta.monthIndex, 1);
+      const firstTue=1+((2-first.getDay()+7)%7);
+      const dataSunday=new Date(meta.year, meta.monthIndex, firstTue); dataSunday.setDate(dataSunday.getDate()-2);
+      return close<=dataSunday ? firstTue : firstTue+7;
+    }
+    function hasCorpReplacement(month, day){
+      const wk=weekKey(dateFor(month, day));
+      return (baseCalendarData[month]||[]).some(ev => (ev.title==='MBR' || ev.title==='MOSH') && weekKey(dateFor(month, ev.day))===wk);
+    }
+    function generatedCadenceEvents(month){
+      const meta=monthMeta[month];
+      const liveMbrDay=firstTuesdayAfterMonthClose(month);
+      const out=[];
+      for(let d=1; d<=meta.days; d++){
+        const dow=dateFor(month,d).getDay();
+        if(dow===1){
+          const nextDay=d+1;
+          if(nextDay===liveMbrDay){
+            out.push(e(d,'Live Delivery — Live MBR','live','Live MBR','Firm','Monthly Live scorecard materials ready before the Live MBR.','Live MBR replaces Live Global WBR when month-close data is available by Sunday.'));
+          } else {
+            out.push(e(d,'Live Delivery — Live Global WBR','live','Live Global WBR','Firm','Agenda lock, VP sign-off, and materials ready for the Tuesday Live Global WBR.','Live-owned weekly prep milestone.'));
+          }
+          if(!hasCorpReplacement(month,d)){
+            out.push(e(d,'Corp Delivery — Jamie WBR','core','Jamie WBR','Firm','Prep content and VP alignment send for the Wednesday Jamie WBR.','Suppress on MBR or MOSH weeks.'));
+          }
+        }
+        if(dow===2){
+          if(d===liveMbrDay){
+            out.push(e(d,'Live MBR','meeting','Live MBR','Firm','Monthly Live operating review focused on month-close performance and priority actions.','Replaces Live Global WBR for this monthly scorecard cycle.'));
+          } else {
+            out.push(e(d,'Live Global WBR','meeting','Live Global WBR','Firm','Weekly Live operating review.','Actions and decision log sent by EOD.'));
+          }
+        }
+        if(dow===3 && !hasCorpReplacement(month,d)){
+          out.push(e(d,'Jamie WBR','meeting','Jamie WBR','Firm','Weekly Corp business performance review.','On MBR weeks, there is no WBR.'));
+        }
+      }
+      return out;
+    }
+    function getCalendarEvents(month){return (baseCalendarData[month]||[]).concat(generatedCadenceEvents(month))}
 
     const filters = [
       {key:'all', label:'All'}, {key:'core', label:'Corp Material Due'}, {key:'live', label:'Live Delivery'}, {key:'meeting', label:'Meetings'}, {key:'holiday', label:'Holidays'}, {key:'risk', label:'Peak / Risk'}, {key:'align', label:'Needs Alignment'}
@@ -458,7 +475,7 @@
     function renderCalendar(){
       const meta=monthMeta[activeMonth];
       const first=new Date(meta.year,meta.monthIndex,1).getDay();
-      const events=uniqueEvents((calendarData[activeMonth]||[]).filter(passes));
+      const events=uniqueEvents(getCalendarEvents(activeMonth).filter(passes));
       const byDay={};events.forEach(ev=>{(byDay[ev.day]||(byDay[ev.day]=[])).push(ev)}); Object.keys(byDay).forEach(k=>byDay[k]=sortEvents(byDay[k]));
       const grid=document.getElementById('calGrid');
       let html=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="dow">${d}</div>`).join('');
@@ -473,7 +490,7 @@
       band.style.display='none';
     }
     function openDrawer(month,day,index){
-      const evs=sortEvents(uniqueEvents((calendarData[month]||[]).filter(passes).filter(e=>e.day===day)));
+      const evs=sortEvents(uniqueEvents(getCalendarEvents(month).filter(passes).filter(e=>e.day===day)));
       const ev=evs[index]; if(!ev)return;
       const drawer=document.getElementById('drawer'); drawer.classList.add('active');
       document.getElementById('drawerTitle').textContent=`${month} ${day}: ${ev.title}`;
@@ -483,7 +500,7 @@
       document.getElementById('drawerInfo').innerHTML=`<div class="info-row"><strong>Date</strong><span>${month} ${day}, 2026</span></div><div class="info-row"><strong>Type</strong><span>${ev.type}</span></div><div class="info-row"><strong>Cadence</strong><span>${ev.cadence}</span></div><div class="info-row"><strong>Status</strong><span>${ev.status}</span></div><div class="info-row"><strong>Owner</strong><span>${ownerFor(ev.cadence)}</span></div>`;
       drawer.scrollIntoView({behavior:'smooth',block:'nearest'});
     }
-    function ownerFor(c){if(c.includes('MOSH'))return 'GMX BizOps / Live S&O input'; if(c.includes('Jamie'))return 'Enterprise Cadences / Live S&O input'; if(c.includes('Product'))return 'Live Product'; if(c.includes('Holiday'))return 'Calendar constraint'; if(c.includes('BoD'))return 'GMX / Enterprise'; return 'TBD'}
+    function ownerFor(c){if(c.includes('MOSH'))return 'GMX BizOps / Live S&O input'; if(c.includes('Jamie'))return 'Corp Cadences / Live S&O input'; if(c.includes('Product'))return 'Live Product'; if(c.includes('Holiday'))return 'Calendar constraint'; if(c.includes('BoD'))return 'GMX / Enterprise'; return 'TBD'}
 
     renderForums();renderCadenceSelector();renderLane();renderMonthTabs();renderFilters();renderCalendar();
   </script>
