@@ -158,7 +158,7 @@
         <div class="rule"><h3>Corp cadences</h3><p>Corp Material Due Dates are formal checkpoints. Live Delivery marks the refreshed Live read before the forum.</p></div>
         <div class="rule"><h3>Corp replacement rule</h3><p>On MBR weeks, there is no WBR.</p></div>
         <div class="rule"><h3>Jamie WBR</h3><p>Firm commitment. Live will meet required WBR deadlines and maintain enterprise pre-read discipline.</p></div>
-        <div class="rule"><h3>Jamie MBR</h3><p>Pre-read obligation is firm. The refreshed Live delivery model needs alignment as long as it lands before the approved pre-read lock.</p></div>
+        <div class="rule"><h3></h3><p>Pre-read obligation is firm. The refreshed Live delivery model needs alignment as long as it lands before the approved pre-read lock.</p></div>
         <div class="rule"><h3>MOSH</h3><p>Live delivery / refresh model needs alignment. Ideal target is 48 hours before the meeting; otherwise Live may miss pre-read and share after the call.</p></div>
         <div class="rule"><h3>Product & Design</h3><p>Prep cycle is owned by Live Product and remains editable until the operating model is finalized.</p></div>
       </div>
@@ -222,7 +222,7 @@
         ]
       },
       jamieMbr: {
-        title:'Jamie MBR', type:'Corp cadence', owner:'Enterprise Cadences / Live S&O input', mode:'Disseminate', status:'Needs Alignment',
+        title:'', type:'Corp cadence', owner:'Enterprise Cadences / Live S&O input', mode:'Disseminate', status:'Needs Alignment',
         purpose:'Monthly Corp business review where Live provides the required performance update and priority issues.',
         note:'Live will hit the Corp pre-read lock. Any post-lock refresh path needs alignment.',
         weeks:[
@@ -236,14 +236,14 @@
           {label:'Week 2 — Monthly Business Performance', days:{
             Mon:[{t:'Live refresh path', d:'If aligned.', c:'align'}],
             Tue:[],
-            Wed:[{t:'Meeting', d:'Jamie MBR.', c:'meeting'}],
+            Wed:[{t:'Meeting', d:'.', c:'meeting'}],
             Thu:[{t:'Actions and follow-ups', d:'Owners and next steps confirmed.', c:'live'}],
             Fri:[]
           }}
         ]
       },
       mosh: {
-        title:'MOSH / Jamie MBR', type:'Corp / GMX cadence', owner:'GMX BizOps / Enterprise Cadences / Live S&O input', mode:'Decide', status:'Needs Alignment',
+        title:'MOSH / ', type:'Corp / GMX cadence', owner:'GMX BizOps / Enterprise Cadences / Live S&O input', mode:'Decide', status:'Needs Alignment',
         purpose:'Combined Corp executive review cycle where MOSH and Jamie MBR replace Jamie WBR in the meeting week.',
         note:'Live Delivery Date needs alignment. Ideal target is 48 hours before MOSH; otherwise Live may miss pre-read and share after the call.',
         weeks:[
@@ -289,7 +289,7 @@
       {key:'jamieWbr', title:'Jamie WBR', mode:'Disseminate', bubble:'dis', type:'Corp cadence', purpose:'Weekly Corp business performance review.'},
       {key:'liveMbr', title:'Live MBR', mode:'Do', bubble:'do', type:'Live-only cadence', purpose:'Monthly Live review for scorecard readout, performance diagnosis, and priority actions.'},
       {key:'jamieMbr', title:'Jamie MBR', mode:'Disseminate', bubble:'dis', type:'Corp cadence', purpose:'Monthly Corp business review. Pre-read timing is firm; post-lock refresh path needs alignment.'},
-      {key:'mosh', title:'MOSH / Jamie MBR', mode:'Decide', bubble:'decide', type:'Corp / GMX cadence', purpose:'Executive review cycle where MOSH and Jamie MBR replace Jamie WBR in the meeting week.'},
+      {key:'mosh', title:'MOSH', mode:'Decide', bubble:'decide', type:'Corp / GMX cadence', purpose:'Executive review cycle where MOSH and Jamie MBR replace Jamie WBR in the meeting week.'},
       {key:'productDesign', title:'Product & Design', mode:'Debate', bubble:'debate', type:'Product-owned cadence', purpose:'Product-owned cadence. Prep model needs alignment with Live Product.'}
     ];
 
