@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Strategy Operating Cadence</title>
+  <style>
+    :root {
+      --ebay-blue:#0064d2;
+      --ebay-red:#e53238;
+      --ebay-yellow:#f5af02;
+      --ebay-green:#86b817;
+      --ink:#111827;
+      --slate:#475569;
+      --muted:#64748b;
+      --line:#d8dee8;
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --navy:#0f172a;
+      --core:#1e3a8a;
+      --live:#0f766e;
+      --live-soft:#e9fbf8;
+      --core-soft:#eff6ff;
+      --align:#b45309;
+      --align-soft:#fff7ed;
+      --risk:#b91c1c;
+      --risk-soft:#fff1f2;
+      --meeting:#263142;
+      --holiday:#92400e;
+      --holiday-soft:#fffbeb;
+      --shadow:0 16px 42px rgba(15,23,42,.08);
+      --shadow-sm:0 8px 20px rgba(15,23,42,.06);
+      --radius:18px;
+      --radius-sm:12px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+    .topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    .topbar-inner{max-width:1400px;margin:0 auto;padding:13px 28px;display:flex;gap:22px;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:12px;min-width:280px}
+    .brand-mark{display:flex;gap:3px;align-items:center}
+    .dot{width:9px;height:9px;border-radius:50%}.b{background:var(--ebay-blue)}.r{background:var(--ebay-red)}.y{background:var(--ebay-yellow)}.g{background:var(--ebay-green)}
+    .brand-title{font-weight:800;font-size:14px;letter-spacing:-.01em;color:var(--navy)}
+    .navlinks{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+    .navlinks a{text-decoration:none;color:#334155;font-weight:700;font-size:12px;padding:9px 11px;border-radius:999px;transition:.15s ease}
+    .navlinks a:hover{background:#eef2f7;color:var(--navy)}
+    .updated-chip{font-size:11px;font-weight:800;color:#334155;background:#f8fafc;border:1px solid var(--line);border-radius:999px;padding:8px 12px;white-space:nowrap}
+    .page{max-width:1400px;margin:0 auto;padding:32px 28px 70px}
+    section{scroll-margin-top:85px;margin-bottom:28px}
+    .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#fff 0%,#f8fbff 56%,#edf5ff 100%);border:1px solid var(--line);border-radius:28px;padding:44px;box-shadow:var(--shadow)}
+    .hero:before{content:"";position:absolute;right:-90px;top:-90px;width:340px;height:340px;background:radial-gradient(circle, rgba(0,100,210,.13), rgba(0,100,210,0) 65%);pointer-events:none}
+    .eyebrow{font-size:12px;font-weight:900;color:var(--ebay-blue);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+    h1{font-size:56px;line-height:1.02;letter-spacing:-.055em;margin:0 0 12px;color:var(--navy)}
+    .subtitle{font-size:22px;line-height:1.35;color:#334155;font-weight:600;max-width:850px;margin:0 0 28px}
+    .exec-takeaway{margin:26px 0 22px;padding:18px 20px;border-radius:18px;background:linear-gradient(90deg,#0f172a,#1e3a8a);color:#fff;display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:center;box-shadow:0 12px 28px rgba(15,23,42,.14)}.exec-takeaway strong{display:block;font-size:19px;line-height:1.25;margin-bottom:5px}.exec-takeaway span{display:block;font-size:13px;line-height:1.45;color:#dbeafe;font-weight:700}.exec-next{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.exec-next div{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:10px}.exec-next b{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#bfdbfe;margin-bottom:4px}.exec-next em{font-style:normal;font-size:12px;font-weight:850;color:#fff}.purpose{display:grid;grid-template-columns:1.4fr .9fr;gap:22px;align-items:stretch}
+    .purpose-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-sm)}
+    .purpose-card p{font-size:17px;line-height:1.55;color:#334155;margin:0;font-weight:650}.purpose-card strong{color:var(--navy)}
+    .status-box{display:flex;flex-direction:column;gap:12px}
+    .status-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:13px;color:#334155;font-weight:800}
+    .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 9px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.055em;white-space:nowrap}
+    .pill.firm{background:#e7f8ef;color:#166534}.pill.align{background:var(--align-soft);color:var(--align)}.pill.tbd{background:#f1f5f9;color:#475569}.pill.core{background:var(--core-soft);color:var(--core)}.pill.live{background:var(--live-soft);color:var(--live)}.pill.meeting{background:#eef2f7;color:#263142}.pill.holiday{background:var(--holiday-soft);color:var(--holiday)}.pill.risk{background:var(--risk-soft);color:var(--risk)}.pill.do{background:#ecfdf5;color:#047857}.pill.dis{background:#eff6ff;color:#1d4ed8}.pill.decide{background:#fef2f2;color:#b91c1c}.pill.debate{background:#f5f3ff;color:#6d28d9}.mode-pill{font-size:11px;padding:7px 11px;box-shadow:0 6px 14px rgba(15,23,42,.06)}
+    .anchor-title{display:flex;align-items:flex-end;justify-content:space-between;margin:0 0 18px;gap:16px}
+    .anchor-title h2{font-size:29px;letter-spacing:-.035em;margin:0;color:var(--navy)}
+    .anchor-title p{margin:6px 0 0;color:var(--muted);font-size:14px;font-weight:650;max-width:760px;line-height:1.5}
+    .section-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:28px}
+    .tension-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+    .tension{border:1px solid var(--line);border-radius:16px;background:#fff;padding:20px;position:relative;min-height:150px}.tension:nth-child(1){border-top:5px solid var(--core)}.tension:nth-child(2){border-top:5px solid var(--live)}.tension:nth-child(3){border-top:5px solid var(--ebay-yellow)}
+    .tension .num{font-family:var(--mono);font-size:12px;font-weight:900;color:#94a3b8;margin-bottom:14px}.tension h3{font-size:18px;margin:0 0 8px;color:var(--navy)}.tension p{font-size:14px;color:#475569;line-height:1.48;margin:0;font-weight:600}
+    .model-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:stretch;margin-top:18px}
+    .flow-step{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;position:relative;min-height:130px}.flow-step:not(:last-child):after{content:"→";position:absolute;right:-15px;top:50%;transform:translateY(-50%);font-size:23px;font-weight:900;color:#94a3b8;z-index:2}.flow-step .label{font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#64748b;margin-bottom:10px}.flow-step h3{font-size:16px;line-height:1.2;margin:0 0 8px;color:var(--navy)}.flow-step p{font-size:12px;color:#475569;line-height:1.4;margin:0;font-weight:650}
+    .principle{margin-top:18px;border-radius:16px;background:linear-gradient(90deg,#0f172a,#1e3a8a);color:#fff;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:20px}.principle strong{font-size:17px}.principle span{font-size:13px;opacity:.88;font-weight:650}
+    .forum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.forum-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 6px 16px rgba(15,23,42,.04);cursor:pointer;transition:.16s ease}.forum-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm);border-color:#bac5d3}.forum-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}.forum-card h3{font-size:20px;letter-spacing:-.025em;margin:0;color:var(--navy)}.forum-card p{font-size:13px;line-height:1.46;color:#475569;font-weight:650;margin:8px 0 14px}.meta-row{display:flex;gap:7px;flex-wrap:wrap}.mini-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:850;color:var(--ebay-blue);margin-top:12px}
+    .prep-shell{display:grid;grid-template-columns:280px 1fr;gap:20px}.cadence-selector{display:flex;flex-direction:column;gap:10px}.cadence-btn{border:1px solid var(--line);background:#fff;border-radius:14px;text-align:left;padding:14px 14px;cursor:pointer;transition:.15s ease}.cadence-btn:hover{border-color:#aeb9c8}.cadence-btn.active{border-color:var(--ebay-blue);box-shadow:0 0 0 3px rgba(0,100,210,.12)}.cadence-btn strong{display:block;color:var(--navy);font-size:14px;margin-bottom:5px}.cadence-btn span{font-size:12px;color:#64748b;font-weight:750}.lane-panel{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}.lane-head{padding:22px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:18px;align-items:flex-start;background:linear-gradient(180deg,#fff,#fafcff)}.lane-head h3{font-size:23px;margin:0 0 6px;letter-spacing:-.03em;color:var(--navy)}.lane-head p{font-size:13px;color:#475569;font-weight:650;line-height:1.45;margin:0;max-width:750px}.lane-badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.week-stack{padding:22px;display:flex;flex-direction:column;gap:18px}.week-block{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}.week-label{background:#f8fafc;border-bottom:1px solid var(--line);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;color:#334155;font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.07em}.days{display:grid;grid-template-columns:repeat(5,1fr)}.day{min-height:148px;border-right:1px solid var(--line);padding:12px;background:#fff}.day:last-child{border-right:none}.day-name{font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.08em;color:#64748b;margin-bottom:9px}.task{border-left:4px solid #94a3b8;background:#f8fafc;border-radius:10px;padding:9px 10px;margin-bottom:8px}.task strong{display:block;font-size:12px;color:#172033;margin-bottom:4px}.task span{font-size:11.5px;color:#475569;font-weight:650;line-height:1.35}.task.live{border-color:var(--live);background:var(--live-soft)}.task.core{border-color:var(--core);background:var(--core-soft)}.task.align{border-color:var(--align);background:var(--align-soft)}.task.meeting{border-color:#0f172a;background:#f8fafc}.task.risk{border-color:var(--risk);background:var(--risk-soft)}
+    .calendar-toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}.month-tabs{display:flex;gap:6px;flex-wrap:wrap}.month-tab,.filter-btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 14px;font-weight:900;font-size:12px;color:#475569;cursor:pointer}.month-tab.active,.filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}.filters{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.cal-wrap{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:20px;background:#fff}.peak-band{position:absolute;left:0;right:0;pointer-events:none;background:linear-gradient(90deg,rgba(185,28,28,.10),rgba(245,175,2,.22));border-top:2px solid rgba(185,28,28,.34);border-bottom:2px solid rgba(180,83,9,.42);z-index:0;display:none}.peak-label{position:absolute;right:16px;top:10px;background:#fff7ed;color:#991b1b;border:1px solid #fca5a5;border-radius:999px;padding:8px 12px;font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.05em;box-shadow:0 8px 18px rgba(185,28,28,.12)}.cal-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(7,1fr);border-collapse:collapse}.dow{padding:11px;text-align:center;background:#f8fafc;border-bottom:1px solid var(--line);border-right:1px solid var(--line);font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.08em;color:#64748b}.dow:nth-child(7){border-right:none}.cal-day{min-height:132px;padding:8px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(255,255,255,.86);position:relative}.cal-day.peak-cell{background:linear-gradient(135deg,rgba(185,28,28,.065),rgba(245,175,2,.16));box-shadow:inset 0 2px 0 rgba(185,28,28,.20),inset 0 -2px 0 rgba(180,83,9,.22)}.cal-day.peak-cell:after{content:"";position:absolute;left:0;right:0;top:42px;height:22px;background:linear-gradient(90deg,rgba(185,28,28,.10),rgba(245,175,2,.18));border-top:1px solid rgba(185,28,28,.18);border-bottom:1px solid rgba(180,83,9,.18);pointer-events:none}.peak-inline-label{position:relative;z-index:2;display:inline-flex;align-items:center;margin-top:2px;padding:4px 7px;border-radius:999px;background:#fff1f2;border:1px solid #fecaca;color:#991b1b;font-size:9px;font-weight:950;text-transform:uppercase;letter-spacing:.06em}.cal-day:nth-child(7n){border-right:none}.cal-day.empty{background:#f8fafc}.date-num{font-size:12px;font-weight:950;color:#475569;margin-bottom:5px}.chip{display:block;width:100%;border:0;border-left:4px solid #94a3b8;background:#f8fafc;color:#334155;border-radius:8px;padding:6px 7px;margin-bottom:5px;text-align:left;font-size:10px;line-height:1.23;font-weight:850;cursor:pointer}.chip:hover{filter:brightness(.985);transform:translateY(-1px)}.chip.core{background:var(--core-soft);border-color:var(--core);color:var(--core)}.chip.live{background:var(--live-soft);border-color:var(--live);color:var(--live)}.chip.align{background:var(--align-soft);border-color:var(--align);color:var(--align)}.chip.meeting{background:#f1f5f9;border-color:#0f172a;color:#1f2937}.chip.holiday{background:var(--holiday-soft);border-color:#f59e0b;color:#92400e}.chip.risk{background:#fff1f2;border-color:var(--risk);color:var(--risk);font-weight:950;box-shadow:0 5px 12px rgba(185,28,28,.10)}.drawer{display:none;margin-top:16px;border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:var(--shadow-sm);overflow:hidden}.drawer.active{display:block}.drawer-head{padding:17px 20px;background:#0f172a;color:#fff;display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.drawer-head h3{font-size:18px;margin:0 0 6px}.drawer-head p{font-size:12px;margin:0;color:#cbd5e1;font-weight:700}.drawer-body{padding:20px;display:grid;grid-template-columns:1.2fr .8fr;gap:18px}.drawer-body p{margin:0;color:#334155;font-size:14px;line-height:1.55;font-weight:650}.info-list{display:flex;flex-direction:column;gap:8px}.info-row{display:flex;justify-content:space-between;gap:12px;font-size:12px;border-bottom:1px dashed var(--line);padding-bottom:7px}.info-row strong{color:#64748b;text-transform:uppercase;letter-spacing:.06em;font-size:10px}.info-row span{font-weight:850;color:#0f172a;text-align:right}.rules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.rule{border:1px solid var(--line);border-radius:16px;background:#fff;padding:19px}.rule h3{font-size:16px;margin:0 0 8px;color:var(--navy)}.rule p{font-size:13px;line-height:1.45;color:#475569;font-weight:650;margin:0}.source-note{font-size:11px;color:#64748b;line-height:1.45;font-weight:650;margin-top:20px}.editable-note{margin-top:16px;padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px dashed #cbd5e1;color:#475569;font-size:12px;font-weight:700;line-height:1.45}
+    @media(max-width:1100px){h1{font-size:42px}.exec-takeaway{grid-template-columns:1fr}.exec-next{grid-template-columns:1fr}.purpose{grid-template-columns:1fr}.tension-grid,.forum-grid,.rules-grid{grid-template-columns:1fr}.model-flow{grid-template-columns:1fr}.flow-step:after{display:none}.prep-shell{grid-template-columns:1fr}.days{grid-template-columns:1fr}.day{border-right:none;border-bottom:1px solid var(--line)}.drawer-body{grid-template-columns:1fr}.topbar-inner{align-items:flex-start;flex-direction:column}.navlinks{justify-content:flex-start}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><div class="brand-mark"><span class="dot b"></span><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><div class="brand-title">Live Strategy Operating Cadence</div></div>
+      <nav class="navlinks"><a href="#why">Why</a><a href="#model">Model</a><a href="#forums">Forum Map</a><a href="#rhythms">Prep Rhythms</a><a href="#calendar">Jun-Dec Calendar</a><a href="#rules">Rules</a></nav>
+      <div class="updated-chip">Last updated: May 28, 2026</div>
+    </div>
+  </header>
+
+  <main class="page">
+    <section id="why" class="hero">
+      <div class="eyebrow">Executive operating artifact</div>
+      <h1>Live Strategy Operating Cadence</h1>
+      <p class="subtitle">Use this to see when each forum happens, what Live owes, and where leaders need to align before materials lock.</p>
+      <div class="exec-takeaway"><div><strong>Corp gets predictability. Live gets a refresh lane.</strong><span>Stakeholders can scan the calendar, spot due dates and risk windows, and align on where and how Live shows up in exec forums.</span></div><div class="exec-next"><div><b>Know</b><em>Fixed Corp deadlines</em></div><div><b>Align</b><em>Live refresh lane</em></div><div><b>Watch</b><em>Peak and open owners</em></div></div></div>
+      <div class="purpose">
+        <div class="purpose-card"><p><strong>Use this artifact to answer three questions:</strong> What is due? Who owns it? Where do we need a refreshed Live read before leaders make a decision?</p></div>
+        <div class="status-box">
+          <div class="status-row"><span>Fixed commitments</span><span class="pill firm">Firm</span></div>
+          <div class="status-row"><span>Refresh timing to decide</span><span class="pill align">Needs Alignment</span></div>
+          <div class="status-row"><span>Prep ownership to close</span><span class="pill tbd">TBD</span></div>
+        </div>
+      </div>
+      <div class="tension-grid">
+        <div class="tension"><div class="num">01</div><h3>Corp deadlines stay fixed</h3><p>Enterprise forums need materials, pre-reads, and structured inputs on time.</p></div>
+        <div class="tension"><div class="num">02</div><h3>Live data keeps moving</h3><p>Performance, seller behavior, launches, and demand signals continue to change after the first material lock.</p></div>
+        <div class="tension"><div class="num">03</div><h3>One operating view</h3><p>Leaders can scan the same source of truth for dates, deliverables, owners, and escalation paths.</p></div>
+      </div>
+    </section>
+
+    <section id="model">
+      <div class="anchor-title"><div><h2>Operating model</h2><p>Start here to understand the handoff: Corp deadlines stay fixed, and Live Delivery marks when a fresher read is expected before the forum.</p></div></div>
+      <div class="section-card">
+        <div class="model-flow">
+          <div class="flow-step"><div class="label">Checkpoint</div><h3>Corp Material Due Date</h3><p>Formal enterprise or GMX materials deadline.</p></div>
+          <div class="flow-step"><div class="label">Refresh</div><h3>Live performance inputs</h3><p>Updated Live signals, business reads, and owner inputs.</p></div>
+          <div class="flow-step"><div class="label">Leadership</div><h3>Live VP Alignment</h3><p>Narrative review and decision framing before delivery.</p></div>
+          <div class="flow-step"><div class="label">Output</div><h3>Live Delivery Date</h3><p>Refreshed Live view before the forum. Status may be Firm or Needs Alignment.</p></div>
+          <div class="flow-step"><div class="label">Forum</div><h3>Discussion / decision</h3><p>Meeting moment, decision ask, and follow-up ownership.</p></div>
+        </div>
+        <div class="principle"><strong>Corp gets predictability. Live gets a refresh lane.</strong><span>Stakeholders align on where and how Live shows up in exec forums.</span></div>
+      </div>
+    </section>
+
+    <section id="forums">
+      <div class="anchor-title"><div><h2>Forum map</h2><p>Pick a forum to see its altitude, decision mode, and prep path.</p></div></div>
+      <div class="forum-grid" id="forumGrid"></div>
+    </section>
+
+    <section id="rhythms">
+      <div class="anchor-title"><div><h2>Prep rhythms</h2><p>Select a cadence to see what happens each day, who needs to move, and where Corp and Live handoffs occur.</p></div></div>
+      <div class="section-card prep-shell">
+        <div class="cadence-selector" id="cadenceSelector"></div>
+        <div class="lane-panel" id="lanePanel"></div>
+      </div>
+    </section>
+
+    <section id="calendar">
+      <div class="anchor-title"><div><h2>June-December calendar</h2><p>Use the filters to isolate Corp due dates, Live Delivery targets, meeting dates, holidays, peak risk, and open alignment gaps.</p></div></div>
+      <div class="section-card">
+        <div class="calendar-toolbar">
+          <div class="month-tabs" id="monthTabs"></div>
+          <div class="filters" id="filters"></div>
+        </div>
+        <div class="cal-wrap" id="calWrap">
+          <div class="peak-band" id="peakBand"><div class="peak-label">Live Peak Operating Block: Black Friday → Christmas</div></div>
+          <div class="cal-grid" id="calGrid"></div>
+        </div>
+        <div class="drawer" id="drawer"><div class="drawer-head"><div><h3 id="drawerTitle">Select a calendar item</h3><p id="drawerSub">Details will appear here.</p></div><span id="drawerStatus" class="pill firm">Firm</span></div><div class="drawer-body"><p id="drawerDesc"></p><div class="info-list" id="drawerInfo"></div></div></div>
+        <div class="editable-note"><strong>Update note:</strong> calendar dates, cadence definitions, and status chips are driven by editable data objects in the HTML. Make future date changes in the <span style="font-family:var(--mono)">calendarData</span> and <span style="font-family:var(--mono)">cadenceData</span> sections.</div>
+      </div>
+    </section>
+
+    <section id="rules">
+      <div class="anchor-title"><div><h2>Rules of engagement</h2><p>Use these rules to resolve timing conflicts, protect pre-reads, and keep follow-up ownership clear.</p></div></div>
+      <div class="rules-grid">
+        <div class="rule"><h3>Live-only cadences</h3><p>Use the Live-only prep rhythm. No Corp Material Due Date or enterprise handoff is required.</p></div>
+        <div class="rule"><h3>Corp cadences</h3><p>Corp Material Due Dates are formal checkpoints. Live Delivery marks the refreshed Live read before the forum.</p></div>
+        <div class="rule"><h3>Corp replacement rule</h3><p>On MBR weeks, there is no WBR.</p></div>
+        <div class="rule"><h3>Jamie WBR</h3><p>Firm commitment. Live will meet required WBR deadlines and maintain enterprise pre-read discipline.</p></div>
+        <div class="rule"><h3>Jamie MBR</h3><p>Pre-read obligation is firm. The refreshed Live delivery model needs alignment as long as it lands before the approved pre-read lock.</p></div>
+        <div class="rule"><h3>MOSH</h3><p>Live delivery / refresh model needs alignment. Ideal target is 48 hours before the meeting; otherwise Live may miss pre-read and share after the call.</p></div>
+        <div class="rule"><h3>Product & Design</h3><p>Prep cycle is owned by Live Product and remains editable until the operating model is finalized.</p></div>
+      </div>
+      <p class="source-note">Source basis: GMX calendar dates reflect the 2026 GMX BizOps Cadences calendar; MOSH principles reflect the Intro to MOSH 2026 guidance. Live-specific refresh status and prep rules are operating design assumptions for alignment.</p>
+    </section>
+  </main>
+
+  <script>
+    /*
+      EDITABLE DATA ZONE
+      Change cadenceData / calendarData below to keep this as a living document.
+    */
+    const cadenceData = {
+      liveWbr: {
+        title:'Live Global WBR', type:'Live-only', owner:'Live S&O', mode:'Do', status:'Firm',
+        purpose:'Weekly Live operating review to align on what happened, what is changing, and what needs action.',
+        note:'One-week operating loop from agenda lock through meeting execution and follow-up.',
+        weeks:[
+          {label:'Lock and run', days:{
+            Mon:[{t:'Agenda lock / VP sign-off', d:'AM.', c:'live'},{t:'Materials ready', d:'EOD.', c:'live'}],
+            Tue:[{t:'Live Global WBR', d:'Actions and decision log sent by EOD.', c:'meeting'}],
+            Wed:[{t:'Next agenda shaping begins', d:'Prep deck opens for the next cycle.', c:'live'}],
+            Thu:[{t:'Owners refine inputs', d:'Owners refine inputs and prep content.', c:'live'}],
+            Fri:[{t:'VP agenda sent', d:'Sent by EOD.', c:'live'}]
+          }}
+        ]
+      },
+      liveMbr: {
+        title:'Live MBR', type:'Live-only', owner:'Live S&O / Analytics', mode:'Do', status:'Firm',
+        purpose:'Monthly Live operating review focused on month-close performance, scorecard readout, and priority actions.',
+        note:'Uses the same one-week rhythm as Live Global WBR, with monthly metrics and scorecard content. Replaces Live Global WBR on the first Tuesday after month close, when month-close data is available by Sunday.',
+        weeks:[
+          {label:'Lock and run', days:{
+            Mon:[{t:'Agenda lock / VP sign-off', d:'AM.', c:'live'},{t:'Materials ready', d:'EOD.', c:'live'}],
+            Tue:[{t:'Live MBR', d:'Actions and decision log sent by EOD.', c:'meeting'}],
+            Wed:[{t:'Next agenda shaping begins', d:'Prep deck opens for the next cycle.', c:'live'}],
+            Thu:[{t:'Owners refine inputs', d:'Owners refine inputs and prep content.', c:'live'}],
+            Fri:[{t:'VP agenda sent', d:'Sent by EOD.', c:'live'}]
+          }}
+        ]
+      },
+      jamieWbr: {
+        title:'Jamie WBR', type:'Corp cadence', owner:'Enterprise Cadences / Live S&O input', mode:'Disseminate', status:'Firm',
+        purpose:'Weekly Corp business performance review where Live contributes the required performance update.',
+        note:'Live follows the weekly Corp timing.',
+        weeks:[
+          {label:'Week 1 — Weekly Business Performance', days:{
+            Mon:[{t:'Prep content & VP alignment send', d:'Live update sent for VP alignment.', c:'core'}],
+            Tue:[],
+            Wed:[{t:'Meeting', d:'Jamie WBR.', c:'meeting'}],
+            Thu:[],
+            Fri:[]
+          }},
+          {label:'Week 2 — Weekly Business Performance', days:{
+            Mon:[{t:'Prep content & VP alignment send', d:'Live update sent for VP alignment.', c:'core'}],
+            Tue:[],
+            Wed:[{t:'Meeting', d:'Jamie WBR.', c:'meeting'}],
+            Thu:[],
+            Fri:[]
+          }}
+        ]
+      },
+      jamieMbr: {
+        title:'Jamie MBR', type:'Corp cadence', owner:'Enterprise Cadences / Live S&O input', mode:'Disseminate', status:'Needs Alignment',
+        purpose:'Monthly Corp business review where Live provides the required performance update and priority issues.',
+        note:'Live will hit the Corp pre-read lock. Any post-lock refresh path needs alignment.',
+        weeks:[
+          {label:'Week 1 — Corp pre-read prep', days:{
+            Mon:[{t:'Prep content & VP alignment send', d:'Live update sent for VP alignment.', c:'core'}],
+            Tue:[{t:'Corp pre-read input finalized', d:'Final input ready for Corp pre-read.', c:'core'}],
+            Wed:[{t:'Corp pre-read lock; Live Delivery Date', d:'Corp lock is firm.', c:'core'}],
+            Thu:[],
+            Fri:[]
+          }},
+          {label:'Week 2 — Monthly Business Performance', days:{
+            Mon:[{t:'Live refresh path', d:'If aligned.', c:'align'}],
+            Tue:[],
+            Wed:[{t:'Meeting', d:'Jamie MBR.', c:'meeting'}],
+            Thu:[{t:'Actions and follow-ups', d:'Owners and next steps confirmed.', c:'live'}],
+            Fri:[]
+          }}
+        ]
+      },
+      mosh: {
+        title:'MOSH / Jamie MBR', type:'Corp / GMX cadence', owner:'GMX BizOps / Enterprise Cadences / Live S&O input', mode:'Decide', status:'Needs Alignment',
+        purpose:'Combined Corp executive review cycle where MOSH and Jamie MBR replace Jamie WBR in the meeting week.',
+        note:'Live Delivery Date needs alignment. Ideal target is 48 hours before MOSH; otherwise Live may miss pre-read and share after the call.',
+        weeks:[
+          {label:'Week 1 — Materials due', days:{
+            Mon:[],
+            Tue:[],
+            Wed:[],
+            Thu:[],
+            Fri:[{t:'Materials due', d:'Including goals.', c:'core'}]
+          }},
+          {label:'Week 2 — Live refresh window', days:{
+            Mon:[],
+            Tue:[],
+            Wed:[],
+            Thu:[],
+            Fri:[{t:'Live Delivery Date', d:'Needs Alignment.', c:'align'}]
+          }},
+          {label:'Week 3 — Executive review week', days:{
+            Mon:[],
+            Tue:[{t:'MOSH', d:'Decision forum.', c:'meeting'}],
+            Wed:[{t:'Jamie MBR', d:'Monthly business review.', c:'meeting'}],
+            Thu:[],
+            Fri:[]
+          }}
+        ]
+      },
+      productDesign: {
+        title:'Product & Design Review', type:'Product-owned cadence', owner:'Live Product', mode:'Debate', status:'Needs Alignment',
+        purpose:'Live Product-owned forum for product/design problem-solving, tradeoff discussion, and decision preparation.',
+        note:'Prep cycle needs alignment with Live Product.',
+        weeks:[{label:'Prep model to define with Live Product', days:{
+          Mon:[{t:'Prep cycle TBD', d:'To be defined with Live Product.', c:'align'}],
+          Tue:[{t:'Prep cycle TBD', d:'To be defined with Live Product.', c:'align'}],
+          Wed:[{t:'Product & Design', d:'Working cadence.', c:'meeting'}],
+          Thu:[{t:'Follow-ups TBD', d:'To be defined with Live Product.', c:'align'}],
+          Fri:[{t:'Prep cycle TBD', d:'To be defined with Live Product.', c:'align'}]
+        }}]
+      }
+    };
+
+    const forums = [
+      {key:'liveWbr', title:'Live Global WBR', mode:'Do', bubble:'do', type:'Live-only cadence', purpose:'Weekly Live operating review for business health, product updates, and action follow-up.'},
+      {key:'jamieWbr', title:'Jamie WBR', mode:'Disseminate', bubble:'dis', type:'Corp cadence', purpose:'Weekly Corp business performance review.'},
+      {key:'liveMbr', title:'Live MBR', mode:'Do', bubble:'do', type:'Live-only cadence', purpose:'Monthly Live review for scorecard readout, performance diagnosis, and priority actions.'},
+      {key:'jamieMbr', title:'Jamie MBR', mode:'Disseminate', bubble:'dis', type:'Corp cadence', purpose:'Monthly Corp business review. Pre-read timing is firm; post-lock refresh path needs alignment.'},
+      {key:'mosh', title:'MOSH / Jamie MBR', mode:'Decide', bubble:'decide', type:'Corp / GMX cadence', purpose:'Executive review cycle where MOSH and Jamie MBR replace Jamie WBR in the meeting week.'},
+      {key:'productDesign', title:'Product & Design', mode:'Debate', bubble:'debate', type:'Product-owned cadence', purpose:'Product-owned cadence. Prep model needs alignment with Live Product.'}
+    ];
+
+    const monthMeta = {
+      June:{year:2026, monthIndex:5, days:30}, July:{year:2026, monthIndex:6, days:31}, August:{year:2026, monthIndex:7, days:31}, September:{year:2026, monthIndex:8, days:30}, October:{year:2026, monthIndex:9, days:31}, November:{year:2026, monthIndex:10, days:30}, December:{year:2026, monthIndex:11, days:31}
+    };
+
+    // Event types: core, live, align, meeting, holiday, risk. Dates use source calendar where clear; Live Delivery entries are target refresh dates for alignment.
+    const calendarData = {
+      June:[
+        e(3,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep model needs final alignment.'),
+        e(4,'Final BoD Materials Due','core','BoD','Firm','Corp material due date from GMX calendar.','Not a Live delivery item.'),
+        e(10,'MOSH Lite Materials Due','core','MOSH Lite','Firm','Corp material due date from GMX calendar.','Live refresh rule not applied to MOSH Lite.'),
+        e(10,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh model needs alignment before pre-read lock.'),
+        e(15,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
+        e(16,'MOSH Lite','meeting','MOSH Lite','Firm','Meeting date from GMX calendar.','Includes goal review.'),
+        e(17,'BoD','meeting','BoD','Firm','Meeting date from GMX calendar.','Corp enterprise cadence.'),
+        e(18,'BoD','meeting','BoD','Firm','Meeting date from GMX calendar.','Corp enterprise cadence.'),
+        e(16,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read before MBR.','Confirm final pre-read lock with Enterprise Cadences.'),
+        e(18,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Corp pre-read obligation is firm.'),
+        e(19,'Juneteenth','holiday','Holiday','Firm','Holiday from GMX calendar.','Capacity constraint.'),
+        e(25,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh timing needs alignment.'),
+        e(26,'Live Delivery — CEO Experience Review','live','CEO Experience Review','Needs Alignment','Target date for refreshed Live read before the Live-specific review.','Confirm final readout timing with the review owner.'),
+        e(30,'CEO Experience Review — Live','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Live-specific review.')
+      ],
+      July:[
+        e(3,'Independence Day Observed','holiday','Holiday','Firm','Holiday from GMX calendar.','Capacity constraint.'),
+        e(6,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
+        e(9,'MOSH Materials + Goal Slides Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Live delivery target is 48 hours before the meeting; timing needs alignment.'),
+        e(10,'Goal Review','meeting','Goal Review','Firm','Meeting date from GMX calendar.','Corp GMX review.'),
+        e(10,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Confirm whether this is integrated into the pre-read or shared after the call.'),
+        e(14,'MOSH','meeting','MOSH','Firm','Meeting date from GMX calendar.','Live delivery timing needs alignment.'),
+        e(14,'CEO Experience Review — Magi','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Non-Live review.'),
+        e(22,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh timing needs alignment.'),
+        e(28,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read before MBR.','Confirm final pre-read lock with Enterprise Cadences.'),
+        e(30,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Corp pre-read obligation is firm.')
+      ],
+      August:[
+        e(3,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
+        e(5,'LR Design Review','meeting','Long Range Design','Firm','Meeting date from GMX calendar.','Corp cadence.'),
+        e(12,'BoD GMXLT Kickoff','meeting','BoD','Firm','Meeting date from GMX calendar.','Business performance kickoff.'),
+        e(12,'MOSH Materials Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Live delivery target is 48 hours before the meeting; timing needs alignment.'),
+        e(12,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh timing needs alignment.'),
+        e(14,'Goal Review','meeting','Goal Review','Firm','Meeting date from GMX calendar.','Corp GMX review.'),
+        e(17,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
+        e(14,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Confirm whether this is integrated into the pre-read or shared after the call.'),
+        e(18,'MOSH','meeting','MOSH','Firm','Meeting date from GMX calendar.','Live delivery timing needs alignment.'),
+        e(18,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read before MBR.','Confirm final pre-read lock with Enterprise Cadences.'),
+        e(20,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Corp pre-read obligation is firm.'),
+        e(21,'Live Delivery — CEO Experience Review','live','CEO Experience Review','Needs Alignment','Target date for refreshed Live read before the Live-specific review.','Confirm final readout timing with the review owner.'),
+        e(25,'CEO Experience Review — Live','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Live-specific review.'),
+        e(26,'BoD Materials Due','core','BoD','Firm','Corp material due date from GMX calendar.','Business performance.'),
+        e(27,'BoD GMXLT Content Review','meeting','BoD','Firm','Meeting date from GMX calendar.','Jordan content review.'),
+        e(27,'LR Design Review','meeting','Long Range Design','Firm','Meeting date from GMX calendar.','Corp cadence.')
+      ],
+      September:[
+        e(4,'CEO Experience Review Prep — Magi','meeting','CEO Experience Review','Firm','Meeting prep from GMX calendar.','Non-Live review.'),
+        e(7,'Labor Day','holiday','Holiday','Firm','Holiday from GMX calendar.','Capacity constraint.'),
+        e(9,'BoD Strategy Final Review','meeting','BoD','Firm','Meeting date from GMX calendar.','Jordan review.'),
+        e(9,'CEO Experience Review — Magi','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Non-Live review.'),
+        e(9,'Final BoD Materials Due','core','BoD','Firm','Corp material due date from GMX calendar.','Corp enterprise deadline.'),
+        e(16,'BoD Materials Locked','core','BoD','Firm','Lock date from GMX calendar.','Corp enterprise lock.'),
+        e(16,'MOSH Materials Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Live delivery target is 48 hours before the meeting; timing needs alignment.'),
+        e(17,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
+        e(18,'Goal Review','meeting','Goal Review','Firm','Meeting date from GMX calendar.','Corp GMX review.'),
+        e(18,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh timing needs alignment.'),
+        e(21,'CEO Experience Review — Agentic','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Non-Live review.'),
+        e(18,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Confirm whether this is integrated into the pre-read or shared after the call.'),
+        e(22,'MOSH','meeting','MOSH','Firm','Meeting date from GMX calendar.','Live delivery timing needs alignment.'),
+        e(23,'BoD','meeting','BoD','Firm','Meeting date from GMX calendar.','Corp enterprise cadence.'),
+        e(24,'BoD','meeting','BoD','Firm','Meeting date from GMX calendar.','Corp enterprise cadence.'),
+        e(22,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read before MBR.','Confirm final pre-read lock with Enterprise Cadences.'),
+        e(24,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Corp pre-read obligation is firm.'),
+        e(24,'LR Design Review','meeting','Long Range Design','Firm','Meeting date from GMX calendar.','Corp cadence.'),
+        e(29,'MOSH Lite — Live / C2C','meeting','MOSH Lite','Firm','Meeting date from GMX calendar.','Live-specific MOSH Lite content.'),
+        e(30,'MOSH Lite — Shipping / Tariffs / Financial Services / Ads','meeting','MOSH Lite','Firm','Meeting date from GMX calendar.','GMX review.')
+      ],
+      October:[
+        e(14,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
+        e(16,'Live Delivery — CEO Experience Review','live','CEO Experience Review','Needs Alignment','Target date for refreshed Live read before the Live-specific review.','Confirm final readout timing with the review owner.'),
+        e(20,'CEO Experience Review — Live','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Live-specific review.'),
+        e(21,'MOSH Materials Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Live delivery target is 48 hours before the meeting; timing needs alignment.'),
+        e(23,'Goal Review','meeting','Goal Review','Firm','Meeting date from GMX calendar.','Corp GMX review.'),
+        e(23,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh timing needs alignment.'),
+        e(23,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Confirm whether this is integrated into the pre-read or shared after the call.'),
+        e(27,'MOSH','meeting','MOSH','Firm','Meeting date from GMX calendar.','Live delivery timing needs alignment.'),
+        e(28,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
+        e(27,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read before MBR.','Confirm final pre-read lock with Enterprise Cadences.'),
+        e(29,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Corp pre-read obligation is firm.'),
+        e(29,'LR Design Review','meeting','Long Range Design','Firm','Meeting date from GMX calendar.','Corp cadence.')
+      ],
+      November:[
+        e(4,'CEO Experience Review — Magi','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Non-Live review.'),
+        e(4,'BoD Kickoff (Dec)','meeting','BoD','Firm','Meeting date from GMX calendar.','Corp enterprise cadence.'),
+        e(4,'BoD Materials Ask to Teams','core','BoD','Firm','Corp request date from GMX calendar.','Team ask milestone.'),
+        e(12,'MOSH Materials Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Live delivery target is 48 hours before the meeting; timing needs alignment.'),
+        e(12,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh timing needs alignment.'),
+        e(13,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Confirm whether this is integrated into the pre-read or shared after the call.'),
+        e(17,'MOSH','meeting','MOSH','Firm','Meeting date from GMX calendar.','Live delivery timing needs alignment.'),
+        e(18,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Corp pre-read obligation is firm.'),
+        e(19,'BOD GMXLT Kickoff — Dec hold','meeting','BoD','Needs Alignment','Calendar hold; needs TBC.','December kickoff hold.'),
+        e(23,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Live Product prep cycle needs final alignment.'),
+        e(24,'LR Design Review','meeting','Long Range Design','Firm','Meeting date from GMX calendar.','Corp cadence.'),
+        e(25,'HOLD: BoD GMXLT Review with Jordan','meeting','BoD','Needs Alignment','Hold from GMX calendar.','December review hold.'),
+        e(26,'Thanksgiving','holiday','Holiday','Firm','Holiday from GMX calendar.','Capacity constraint.'),
+        e(27,'Thanksgiving observed','holiday','Holiday','Firm','Holiday from GMX calendar.','Capacity constraint.'),
+      ],
+      December:[
+        e(2,'MOSH Materials Due','core','MOSH','Firm','Corp material due date from GMX calendar.','Live delivery target is 48 hours before the meeting; timing needs alignment.'),
+        e(2,'MBR Materials Due','core','Jamie MBR','Firm','Corp material due date from GMX calendar.','Live refresh timing needs alignment.'),
+        e(7,'BoD call','meeting','BoD','Firm','Meeting date from GMX calendar.','Corp enterprise cadence.'),
+        e(4,'Live Delivery — MOSH','live','MOSH','Needs Alignment','Target date for refreshed Live read 48 hours before MOSH.','Confirm whether this is integrated into the pre-read or shared after the call.'),
+        e(8,'MOSH','meeting','MOSH','Firm','Meeting date from GMX calendar.','Live delivery timing needs alignment.'),
+        e(8,'Live Delivery — Jamie MBR','live','Jamie MBR','Needs Alignment','Target date for refreshed Live read before MBR.','Confirm final pre-read lock with Enterprise Cadences.'),
+        e(10,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Corp pre-read obligation is firm.'),
+        e(18,'BOD Materials Due','core','BoD','Firm','Corp material due date from GMX calendar.','Corp enterprise deadline.'),
+        e(20,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
+        e(21,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
+        e(22,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
+        e(23,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
+        e(24,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
+        e(25,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
+        e(28,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
+        e(29,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
+        e(30,'Holiday PTO Observance','holiday','Holiday','Firm','Holiday PTO observance from GMX calendar.','Capacity constraint spanning week.'),
+      ]
+    };
+    function e(day,title,type,cadence,status,desc,implication){return {day,title,type,cadence,status,desc,implication}}
+
+    const filters = [
+      {key:'all', label:'All'}, {key:'core', label:'Corp Material Due'}, {key:'live', label:'Live Delivery'}, {key:'meeting', label:'Meetings'}, {key:'holiday', label:'Holidays'}, {key:'risk', label:'Peak / Risk'}, {key:'align', label:'Needs Alignment'}
+    ];
+
+    let activeCadence='liveWbr';
+    let activeMonth='June';
+    let activeFilter='all';
+
+    function statusClass(status){return status==='Firm'?'firm':status==='Needs Alignment'?'align':'tbd'}
+    function bubbleClass(mode){return mode==='Do'?'do':mode==='Disseminate'?'dis':mode==='Decide'?'decide':'debate'}
+
+    function renderForums(){
+      const grid=document.getElementById('forumGrid');
+      grid.innerHTML=forums.map(f=>`<div class="forum-card" onclick="selectCadence('${f.key}', true)"><div class="forum-top"><h3>${f.title}</h3><span class="pill ${f.bubble}">${f.mode}</span></div><div class="meta-row"><span class="pill ${f.type.includes('Live')?'live':f.type.includes('Product')?'align':'core'}">${f.type}</span><span class="pill ${statusClass(cadenceData[f.key].status)}">${cadenceData[f.key].status}</span></div><p>${f.purpose}</p><span class="mini-link">View prep rhythm →</span></div>`).join('');
+    }
+    function renderCadenceSelector(){
+      const s=document.getElementById('cadenceSelector');
+      s.innerHTML=forums.map(f=>`<button class="cadence-btn ${f.key===activeCadence?'active':''}" onclick="selectCadence('${f.key}')"><strong>${f.title}</strong><span>${cadenceData[f.key].type} · ${cadenceData[f.key].mode}</span></button>`).join('');
+    }
+    function selectCadence(key, scroll){activeCadence=key;renderCadenceSelector();renderLane();if(scroll){document.getElementById('rhythms').scrollIntoView({behavior:'smooth'});}}
+    function renderLane(){
+      const c=cadenceData[activeCadence];
+      const panel=document.getElementById('lanePanel');
+      const badges=`<div class="lane-badges"><span class="pill ${bubbleClass(c.mode)} mode-pill">${c.mode}</span><span class="pill ${c.type.includes('Live')?'live':c.type.includes('Product')?'align':'core'}">${c.type}</span><span class="pill ${statusClass(c.status)}">${c.status}</span></div>`;
+      const weeks=c.weeks.map(w=>`<div class="week-block"><div class="week-label"><span>${w.label}</span><span>Prep sequence</span></div><div class="days">${['Mon','Tue','Wed','Thu','Fri'].map(day=>`<div class="day"><div class="day-name">${day}</div>${(w.days[day]||[]).map(t=>`<div class="task ${t.c}"><strong>${t.t}</strong><span>${t.d}</span></div>`).join('')}</div>`).join('')}</div></div>`).join('');
+      panel.innerHTML=`<div class="lane-head"><div><h3>${c.title}</h3><p>${c.purpose}<br><strong>Prep note:</strong> ${c.note}</p></div>${badges}</div><div class="week-stack">${weeks}</div>`;
+    }
+
+    function renderMonthTabs(){document.getElementById('monthTabs').innerHTML=Object.keys(monthMeta).map(m=>`<button class="month-tab ${m===activeMonth?'active':''}" onclick="activeMonth='${m}';renderCalendar();renderMonthTabs()">${m.slice(0,3)}</button>`).join('')}
+    function renderFilters(){document.getElementById('filters').innerHTML=filters.map(f=>`<button class="filter-btn ${f.key===activeFilter?'active':''}" onclick="activeFilter='${f.key}';renderCalendar();renderFilters()">${f.label}</button>`).join('')}
+    function passes(ev){if(activeFilter==='all')return true;if(activeFilter==='align')return ev.status==='Needs Alignment';return ev.type===activeFilter}
+    function eventRank(ev){const ranks={risk:0,live:1,core:2,align:3,meeting:4,holiday:5};return ranks[ev.type]??9}
+    function sortEvents(list){return list.slice().sort((a,b)=>eventRank(a)-eventRank(b)||a.title.localeCompare(b.title))}
+    function uniqueEvents(list){const seen=new Set();return list.filter(ev=>{const key=[ev.day,ev.title,ev.type,ev.cadence].join('|');if(seen.has(key))return false;seen.add(key);return true;})}
+    function isPeakDay(month, day){return (month==='November' && day>=23) || (month==='December' && day<=25)}
+    function peakLabel(month, day){return (month==='November' && day===23)}
+    function renderCalendar(){
+      const meta=monthMeta[activeMonth];
+      const first=new Date(meta.year,meta.monthIndex,1).getDay();
+      const events=uniqueEvents((calendarData[activeMonth]||[]).filter(passes));
+      const byDay={};events.forEach(ev=>{(byDay[ev.day]||(byDay[ev.day]=[])).push(ev)}); Object.keys(byDay).forEach(k=>byDay[k]=sortEvents(byDay[k]));
+      const grid=document.getElementById('calGrid');
+      let html=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="dow">${d}</div>`).join('');
+      for(let i=0;i<first;i++)html+=`<div class="cal-day empty"></div>`;
+      for(let d=1;d<=meta.days;d++){
+        const peak=isPeakDay(activeMonth,d);
+        const peakBadge=peakLabel(activeMonth,d)?'<div class="peak-inline-label">Peak</div>':'';
+        html+=`<div class="cal-day ${peak?'peak-cell':''}"><div class="date-num">${d}</div>${peakBadge}${(byDay[d]||[]).map((ev,i)=>`<button class="chip ${ev.type}" onclick="openDrawer('${activeMonth}',${d},${i})">${ev.title}</button>`).join('')}</div>`;
+      }
+      grid.innerHTML=html;
+      const band=document.getElementById('peakBand');
+      band.style.display='none';
+    }
+    function openDrawer(month,day,index){
+      const evs=sortEvents(uniqueEvents((calendarData[month]||[]).filter(passes).filter(e=>e.day===day)));
+      const ev=evs[index]; if(!ev)return;
+      const drawer=document.getElementById('drawer'); drawer.classList.add('active');
+      document.getElementById('drawerTitle').textContent=`${month} ${day}: ${ev.title}`;
+      document.getElementById('drawerSub').textContent=`${ev.cadence} · ${ev.type.replace(/\b\w/g, c => c.toUpperCase())}`;
+      const st=document.getElementById('drawerStatus'); st.className=`pill ${statusClass(ev.status)}`; st.textContent=ev.status;
+      document.getElementById('drawerDesc').textContent=ev.desc + ' ' + ev.implication;
+      document.getElementById('drawerInfo').innerHTML=`<div class="info-row"><strong>Date</strong><span>${month} ${day}, 2026</span></div><div class="info-row"><strong>Type</strong><span>${ev.type}</span></div><div class="info-row"><strong>Cadence</strong><span>${ev.cadence}</span></div><div class="info-row"><strong>Status</strong><span>${ev.status}</span></div><div class="info-row"><strong>Owner</strong><span>${ownerFor(ev.cadence)}</span></div>`;
+      drawer.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+    function ownerFor(c){if(c.includes('MOSH'))return 'GMX BizOps / Live S&O input'; if(c.includes('Jamie'))return 'Enterprise Cadences / Live S&O input'; if(c.includes('Product'))return 'Live Product'; if(c.includes('Holiday'))return 'Calendar constraint'; if(c.includes('BoD'))return 'GMX / Enterprise'; return 'TBD'}
+
+    renderForums();renderCadenceSelector();renderLane();renderMonthTabs();renderFilters();renderCalendar();
+  </script>
+</body>
+</html>
