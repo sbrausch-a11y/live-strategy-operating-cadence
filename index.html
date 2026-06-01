@@ -157,7 +157,7 @@
         <div class="rule"><h3>Live-only cadences</h3><p>Use the Live-only prep rhythm. No Corp Material Due Date or enterprise handoff is required.</p></div>
         <div class="rule"><h3>Corp cadences</h3><p>Corp Material Due Dates are formal checkpoints. Live Delivery marks the refreshed Live read before the forum.</p></div>
         <div class="rule"><h3>Corp replacement rule</h3><p>On MBR weeks, there is no WBR.</p></div>
-        <div class="rule"><h3>Jamie WBR</h3><p>Firm commitment. Live will meet required WBR deadlines and maintain enterprise pre-read discipline.</p></div>
+        <div class="rule"><h3>Jamie WBR</h3><p>Live VP review happens Monday night. Materials are due Tuesday by noon; meeting is Wednesday.</p></div>
         <div class="rule"><h3>Jamie MBR</h3><p>Pre-read obligation is firm. The refreshed Live delivery model needs alignment as long as it lands before the approved pre-read lock.</p></div>
         <div class="rule"><h3>MOSH</h3><p>Live delivery / refresh model needs alignment. Ideal target is 48 hours before the meeting; otherwise Live may miss pre-read and share after the call.</p></div>
         <div class="rule"><h3>Product & Design</h3><p>Prep cycle is owned by Live Product and remains editable until the operating model is finalized.</p></div>
@@ -203,18 +203,18 @@
       jamieWbr: {
         title:'Jamie WBR', type:'Corp cadence', owner:'Corp Cadences / Live S&O input', mode:'Disseminate', status:'Firm',
         purpose:'Weekly Corp business performance review where Live contributes the required performance update.',
-        note:'Live follows the weekly Corp timing.',
+        note:'Live VPs review Monday night. Materials are due Tuesday by noon; meeting is Wednesday.',
         weeks:[
           {label:'Week 1 — Weekly Business Performance', days:{
-            Mon:[{t:'Prep content & VP alignment send', d:'Live update sent for VP alignment.', c:'core'}],
-            Tue:[],
+            Mon:[{t:'Live VP review', d:'Monday night.', c:'align'}],
+            Tue:[{t:'Materials delivery due', d:'Due by noon.', c:'core'}],
             Wed:[{t:'Meeting', d:'Jamie WBR.', c:'meeting'}],
             Thu:[],
             Fri:[]
           }},
           {label:'Week 2 — Weekly Business Performance', days:{
-            Mon:[{t:'Prep content & VP alignment send', d:'Live update sent for VP alignment.', c:'core'}],
-            Tue:[],
+            Mon:[{t:'Live VP review', d:'Monday night.', c:'align'}],
+            Tue:[{t:'Materials delivery due', d:'Due by noon.', c:'core'}],
             Wed:[{t:'Meeting', d:'Jamie WBR.', c:'meeting'}],
             Thu:[],
             Fri:[]
@@ -421,7 +421,12 @@
             out.push(e(d,'Live Delivery — Live Global WBR','live','Live Global WBR','Firm','Agenda lock, VP sign-off, and materials ready for the Tuesday Live Global WBR.','Live-owned weekly prep milestone.'));
           }
           if(!hasCorpReplacement(month,d)){
-            out.push(e(d,'Corp Delivery — Jamie WBR','core','Jamie WBR','Firm','Prep content and VP alignment send for the Wednesday Jamie WBR.','Suppress on MBR or MOSH weeks.'));
+            out.push(e(d,'VP Review — Jamie WBR','align','Jamie WBR','Firm','Live VP review for the Wednesday Jamie WBR.','Monday night review. Suppress on MBR or MOSH weeks.'));
+          }
+        }
+        if(dow===2){
+          if(!hasCorpReplacement(month,d)){
+            out.push(e(d,'Corp Delivery — Jamie WBR','core','Jamie WBR','Firm','Materials delivery due by noon for the Wednesday Jamie WBR.','Suppress on MBR or MOSH weeks.'));
           }
         }
         if(dow===2){
