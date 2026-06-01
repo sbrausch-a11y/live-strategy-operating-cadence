@@ -402,7 +402,10 @@
     }
     function hasCorpReplacement(month, day){
       const wk=weekKey(dateFor(month, day));
-      return (baseCalendarData[month]||[]).some(ev => (ev.title==='MBR' || ev.title==='MOSH') && weekKey(dateFor(month, ev.day))===wk);
+      return (baseCalendarData[month]||[]).some(ev => {
+        const isReplacement = ev.cadence==='Jamie MBR' || ev.cadence==='MOSH' || ev.title==='MBR' || ev.title==='MOSH' || ev.title==='June MBR';
+        return isReplacement && weekKey(dateFor(month, ev.day))===wk;
+      });
     }
     function generatedCadenceEvents(month){
       const meta=monthMeta[month];
