@@ -69,7 +69,7 @@
     .tension-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
     .tension{border:1px solid var(--line);border-radius:16px;background:#fff;padding:20px;position:relative;min-height:150px}.tension:nth-child(1){border-top:5px solid var(--core)}.tension:nth-child(2){border-top:5px solid var(--live)}.tension:nth-child(3){border-top:5px solid var(--ebay-yellow)}
     .tension .num{font-family:var(--mono);font-size:12px;font-weight:900;color:#94a3b8;margin-bottom:14px}.tension h3{font-size:18px;margin:0 0 8px;color:var(--navy)}.tension p{font-size:14px;color:#475569;line-height:1.48;margin:0;font-weight:600}
-    .model-flow{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;align-items:stretch;margin-top:18px}
+    .model-flow{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;align-items:stretch;margin-top:18px}
     .flow-step{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;position:relative;min-height:130px}.flow-step:not(:last-child):after{content:"→";position:absolute;right:-15px;top:50%;transform:translateY(-50%);font-size:23px;font-weight:900;color:#94a3b8;z-index:2}.flow-step .label{font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#64748b;margin-bottom:10px}.flow-step h3{font-size:16px;line-height:1.2;margin:0 0 8px;color:var(--navy)}.flow-step p{font-size:12px;color:#475569;line-height:1.4;margin:0;font-weight:650}
     .principle{margin-top:18px;border-radius:16px;background:linear-gradient(90deg,#0f172a,#1e3a8a);color:#fff;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:20px}.principle strong{font-size:17px}.principle span{font-size:13px;opacity:.88;font-weight:650}
     .forum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.forum-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 6px 16px rgba(15,23,42,.04);cursor:pointer;transition:.16s ease}.forum-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm);border-color:#bac5d3}.forum-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}.forum-card h3{font-size:20px;letter-spacing:-.025em;margin:0;color:var(--navy)}.forum-card p{font-size:13px;line-height:1.46;color:#475569;font-weight:650;margin:8px 0 14px}.meta-row{display:flex;gap:7px;flex-wrap:wrap}.mini-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:850;color:var(--ebay-blue);margin-top:12px}
@@ -98,7 +98,7 @@
     <div class="topbar-inner">
       <div class="brand"><div class="brand-mark"><span class="dot b"></span><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><div class="brand-title">Live Strategy Operating Cadence</div></div>
       <nav class="navlinks"><a href="#why">Why</a><a href="#model">Model</a><a href="#forums">Forum Map</a><a href="#rhythms">Prep Rhythms</a><a href="#calendar">Jun-Dec Calendar</a><a href="#rules">Rules</a><a href="#key">Key</a></nav>
-      <div class="updated-chip">Last updated: May 28, 2026</div>
+      <div class="updated-chip">Last published: <span id="lastPublished">Loading...</span></div>
     </div>
   </header>
 
@@ -107,7 +107,7 @@
       <div class="eyebrow">Executive operating artifact</div>
       <h1>Live Strategy Operating Cadence</h1>
       <p class="subtitle">A single view of how Live prepares for, feeds into, and follows up from key executive forums.</p>
-      <div class="exec-takeaway"><div><strong>Core gets predictable inputs. Live gets a committed refresh point.</strong><span>Leaders get one calendar view of due dates, meetings, risk windows, and open alignment gaps.</span></div><div class="exec-next"><div><b>Know</b><em>What is fixed</em></div><div><b>Align</b><em>What needs a refresh</em></div><div><b>Act</b><em>Who owns follow-up</em></div></div></div>
+      <div class="exec-takeaway no-actions"><div><strong>Core gets predictable inputs. Live gets a committed refresh point.</strong><span>Leaders get one calendar view of due dates, meetings, risk windows, and open alignment gaps.</span></div></div>
       <div class="purpose">
         <div class="purpose-card"><p><strong>Why this exists:</strong> Live operates on faster signal cycles than the enterprise cadence. This artifact makes the handoffs explicit: when Live submits into Core forums, when refreshed reads are expected, and where alignment is still needed.</p></div>
         <div class="status-box">
@@ -117,7 +117,7 @@
         </div>
       </div>
       <div class="tension-grid">
-        <div class="tension"><div class="num">01</div><h3>What is fixed</h3><p>Core deadlines, pre-read locks, and executive forum dates.</p></div>
+        <div class="tension"><div class="num">01</div><h3>What is fixed</h3><p>Core deadlines, pre-read locks, executive forum dates, and follow-up ownership.</p></div>
         <div class="tension"><div class="num">02</div><h3>What can move</h3><p>Live signals, performance reads, risks, and market context.</p></div>
         <div class="tension"><div class="num">03</div><h3>What needs alignment</h3><p>Where a refreshed Live read is needed before the forum, and who owns the handoff.</p></div>
       </div>
@@ -132,7 +132,8 @@
           <div class="flow-step"><div class="label">Core Gate</div><h3>Core Submission</h3><p>Required Live input is submitted into the Core process on time.</p></div>
           <div class="flow-step"><div class="label">Core Gate</div><h3>Core Pre-Read Lock</h3><p>The official executive pre-read is locked for review.</p></div>
           <div class="flow-step"><div class="label">Refresh Gate</div><h3>Live Refresh</h3><p>Latest Live read delivered before the same forum. Standard target: 48 hours prior unless otherwise agreed.</p></div>
-          <div class="flow-step"><div class="label">Forum</div><h3>Discussion / decision</h3><p>One meeting moment for the submitted materials, refreshed Live view, decisions, and follow-up ownership.</p></div>
+          <div class="flow-step"><div class="label">Forum</div><h3>Discussion / decision</h3><p>One meeting moment for submitted materials, refreshed Live view, and decisions.</p></div>
+          <div class="flow-step"><div class="label">Follow-up</div><h3>Actions + Decision Log</h3><p>Post-forum decisions, owners, and follow-ups are captured for execution.</p></div>
         </div>
         <div class="principle"><strong>Core gets predictability. Live gets a committed refresh point.</strong><span>Stakeholders know what is submitted, what may refresh, and when Live shows up before exec forums.</span></div>
       </div>
@@ -179,7 +180,7 @@
       <div class="rules-grid">
         <div class="rule"><h3>Live-only cadences</h3><p>Use the Live-only prep rhythm. No Core Submission Deadline or enterprise handoff is required.</p></div>
         <div class="rule"><h3>Core cadences</h3><p>Core Submission is the deadline for Live input into the Core process. Live Refresh is the latest Live read before the forum.</p></div>
-        <div class="rule"><h3>Core replacement rule</h3><p>On MBR weeks, there is no WBR.</p></div>
+        <div class="rule"><h3>MBR replacement rule</h3><p>On MBR weeks, there is no Jamie WBR. Live MBR also replaces Live Global WBR during the MBR materials-due week.</p></div>
         <div class="rule"><h3>Jamie WBR</h3><p>Live VP Review happens Monday night. Core Submission is due Tuesday by noon; Meeting is Wednesday.</p></div>
         <div class="rule"><h3>Jamie MBR</h3><p>Core Submission and Core Pre-Read Lock are firm. Live Refresh happens 48 hours before the meeting unless otherwise aligned.</p></div>
         <div class="rule"><h3>MOSH</h3><p>Live Refresh target is 48 hours before the meeting. If the refresh misses the pre-read path, Live shares after the call.</p></div>
@@ -370,10 +371,10 @@
     ];
 
     const altitudeLayers = [
-      {cls:'shareholder', stream:'stream-shareholder', title:'Shareholders', desc:'Slowest / broadest. External performance narrative.', chips:[{title:'Earnings', meta:'Quarterly · Calendar only'}]},
+      {cls:'shareholder', stream:'stream-shareholder', title:'Shareholders', desc:'Slowest / broadest. External performance narrative.', chips:[{title:'Earnings', meta:'Quarterly · Date shown'}]},
       {cls:'board', stream:'stream-board', title:'Board', desc:'Governance narrative, strategy, performance, and risk.', chips:[{title:'Board', meta:'Materials · Reviews · Meetings', key:'board'}]},
-      {cls:'jamie', stream:'stream-jamie', title:'Jamie / Core ELT', desc:'Core visibility, business health, exceptions, and executive decisions.', chips:[{title:'Jamie WBR', meta:'Weekly', key:'jamieWbr'},{title:'Jamie MBR', meta:'Monthly', key:'jamieMbr'},{title:'CEO Exp Review', meta:'Scheduled · Calendar only'}]},
-      {cls:'jordan', stream:'stream-jordan', title:'Jordan / GMX', desc:'Tradeoffs, escalations, prioritization, and path-to-green decisions.', chips:[{title:'Product & Design', meta:'Working cadence', key:'productDesign'},{title:'MOSH Lite', meta:'Scheduled · Calendar only'},{title:'MOSH', meta:'Monthly', key:'mosh'},{title:'GMXLT Off-sites', meta:'Prep only', key:'gmxltOffsite'}]},
+      {cls:'jamie', stream:'stream-jamie', title:'Jamie / Core ELT', desc:'Core visibility, business health, exceptions, and executive decisions.', chips:[{title:'Jamie WBR', meta:'Weekly', key:'jamieWbr'},{title:'Jamie MBR', meta:'Monthly', key:'jamieMbr'},{title:'CEO Exp Review', meta:'Scheduled forum'}]},
+      {cls:'jordan', stream:'stream-jordan', title:'Jordan / GMX', desc:'Tradeoffs, escalations, prioritization, and path-to-green decisions.', chips:[{title:'Product & Design', meta:'Working cadence', key:'productDesign'},{title:'MOSH Lite', meta:'Scheduled forum'},{title:'MOSH', meta:'Monthly', key:'mosh'},{title:'GMXLT Off-sites', meta:'Prep model TBD', key:'gmxltOffsite'}]},
       {cls:'live', stream:'stream-live', title:'Ashish / Alex / Rahul — Live-owned', desc:'Fastest / closest to execution. Operating read, scorecard, actions, and team alignment.', chips:[{title:'Live Global WBR', meta:'Weekly', key:'liveWbr'},{title:'Live MBR', meta:'Monthly', key:'liveMbr'},{title:'Live All Hands', meta:'Monthly', key:'allHands'}]}
     ];
 
@@ -642,7 +643,14 @@
     }
     function ownerFor(c){if(c.includes('Earnings'))return 'Shareholder / Finance narrative'; if(c.includes('Board'))return 'GMX / Enterprise'; if(c.includes('MOSH'))return 'GMX BizOps / Live S&O input'; if(c.includes('Jamie')||c.includes('CEO Experience'))return 'Core Cadences / Live S&O input'; if(c.includes('Product'))return 'Live Product'; if(c.includes('Live'))return 'Live S&O'; if(c.includes('Holiday'))return 'Calendar constraint'; return 'TBD'}
 
-    renderForums();renderCadenceSelector();renderLane();renderMonthTabs();renderFilters();renderCalendar();
+    function renderLastPublished(){
+      const el=document.getElementById('lastPublished');
+      if(!el)return;
+      const updated=new Date(document.lastModified);
+      el.textContent=updated.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    }
+
+    renderForums();renderCadenceSelector();renderLane();renderMonthTabs();renderFilters();renderCalendar();renderLastPublished();
   </script>
 </body>
 </html>
