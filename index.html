@@ -98,7 +98,7 @@
     <div class="topbar-inner">
       <div class="brand"><div class="brand-mark"><span class="dot b"></span><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><div class="brand-title">Live Strategy Operating Cadence</div></div>
       <nav class="navlinks"><a href="#why">Why</a><a href="#model">Model</a><a href="#forums">Forum Map</a><a href="#rhythms">Prep Rhythms</a><a href="#calendar">Jun-Dec Calendar</a><a href="#rules">Rules</a><a href="#key">Key</a></nav>
-      <div class="updated-chip">Last published: <span id="lastPublished">Loading...</span></div>
+      <div class="updated-chip">Last updated: <span id="lastPublished">Loading...</span></div>
     </div>
   </header>
 
@@ -171,7 +171,7 @@
           <div class="cal-grid" id="calGrid"></div>
         </div>
         <div class="drawer" id="drawer"><div class="drawer-head"><div><h3 id="drawerTitle">Select a calendar item</h3><p id="drawerSub">Details will appear here.</p></div><span id="drawerStatus" class="pill firm">Firm</span></div><div class="drawer-body"><p id="drawerDesc"></p><div class="info-list" id="drawerInfo"></div></div></div>
-        <div class="editable-note"><strong>Update note:</strong> calendar dates, cadence definitions, and status chips are driven by editable data objects in the HTML. Make future date changes in the <span style="font-family:var(--mono)">calendarData</span> and <span style="font-family:var(--mono)">cadenceData</span> sections.</div>
+        <div class="editable-note"><strong>Update note:</strong> calendar dates, cadence definitions, and status chips are driven by editable data objects in the HTML. The header timestamp updates automatically from the saved file timestamp after changes are committed. Make future date changes in the <span style="font-family:var(--mono)">calendarData</span> and <span style="font-family:var(--mono)">cadenceData</span> sections.</div>
       </div>
     </section>
 
@@ -180,7 +180,7 @@
       <div class="rules-grid">
         <div class="rule"><h3>Live-only cadences</h3><p>Use the Live-only prep rhythm. No Core Submission Deadline or enterprise handoff is required.</p></div>
         <div class="rule"><h3>Core cadences</h3><p>Core Submission is the deadline for Live input into the Core process. Live Refresh is the latest Live read before the forum.</p></div>
-        <div class="rule"><h3>MBR replacement rule</h3><p>On MBR weeks, there is no Jamie WBR. Live MBR also replaces Live Global WBR during the MBR materials-due week.</p></div>
+        <div class="rule"><h3>MBR replacement rule</h3><p>On Jamie MBR meeting weeks, there is no Jamie WBR. Starting in July, Live MBR replaces Live Global WBR during the MBR materials-due week so the Live team can do month-close readout ahead of Core lock.</p></div>
         <div class="rule"><h3>Jamie WBR</h3><p>Live VP Review happens Monday night. Core Submission is due Tuesday by noon; Meeting is Wednesday.</p></div>
         <div class="rule"><h3>Jamie MBR</h3><p>Core Submission and Core Pre-Read Lock are firm. Live Refresh happens 48 hours before the meeting unless otherwise aligned.</p></div>
         <div class="rule"><h3>MOSH</h3><p>Live Refresh target is 48 hours before the meeting. If the refresh misses the pre-read path, Live shares after the call.</p></div>
@@ -505,11 +505,11 @@
       tuesday.setDate(d.getDate() - ((d.getDay()-2+7)%7));
       return tuesday.getMonth()===d.getMonth() ? tuesday.getDate() : null;
     }
-    function hasCorpReplacement(month, day){
+    function hasJamieWbrReplacement(month, day){
       const wk=weekKey(dateFor(month, day));
       return (baseCalendarData[month]||[]).some(ev => {
-        const isReplacement = ev.cadence==='Jamie MBR' || ev.cadence==='MOSH' || ev.title==='MBR' || ev.title==='MOSH' || ev.title==='June MBR';
-        return isReplacement && weekKey(dateFor(month, ev.day))===wk;
+        const isMbrMeeting = ev.cadence==='Jamie MBR' && (ev.title==='MBR' || ev.title==='June MBR' || ev.title.endsWith(' MBR'));
+        return isMbrMeeting && weekKey(dateFor(month, ev.day))===wk;
       });
     }
     function generatedCadenceEvents(month){
@@ -525,13 +525,13 @@
           } else {
             out.push(e(d,'Live VP Review — Live Global WBR','live','Live Global WBR','Firm','Agenda lock, VP sign-off, and materials ready for the Tuesday Live Global WBR.','Live-owned weekly prep milestone.'));
           }
-          if(!hasCorpReplacement(month,d)){
-            out.push(e(d,'Live VP Review — Jamie WBR','align','Jamie WBR','Firm','Live VP review for the Wednesday Jamie WBR.','Monday night review. Suppress on MBR or MOSH weeks.'));
+          if(!hasJamieWbrReplacement(month,d)){
+            out.push(e(d,'Live VP Review — Jamie WBR','align','Jamie WBR','Firm','Live VP review for the Wednesday Jamie WBR.','Monday night review. Suppress only during the Jamie MBR meeting week.'));
           }
         }
         if(dow===2){
-          if(!hasCorpReplacement(month,d)){
-            out.push(e(d,'Core Submission — Jamie WBR','core','Jamie WBR','Firm','Materials due by noon for the Wednesday Jamie WBR.','Suppress on MBR or MOSH weeks.'));
+          if(!hasJamieWbrReplacement(month,d)){
+            out.push(e(d,'Core Submission — Jamie WBR','core','Jamie WBR','Firm','Materials due by noon for the Wednesday Jamie WBR.','Suppress only during the Jamie MBR meeting week.'));
           }
         }
         if(dow===2){
@@ -541,8 +541,8 @@
             out.push(e(d,'Live Global WBR','meeting','Live Global WBR','Firm','Weekly Live operating review.','Actions and decision log sent by EOD.'));
           }
         }
-        if(dow===3 && !hasCorpReplacement(month,d)){
-          out.push(e(d,'Jamie WBR','meeting','Jamie WBR','Firm','Weekly Core business performance review.','On MBR weeks, there is no WBR.'));
+        if(dow===3 && !hasJamieWbrReplacement(month,d)){
+          out.push(e(d,'Jamie WBR','meeting','Jamie WBR','Firm','Weekly Core business performance review.','On Jamie MBR meeting weeks, there is no Jamie WBR; MBR material-due weeks do not suppress Jamie WBR.'));
         }
         if(dow===4 && d<=7){
           out.push(e(d,'Live All Hands','meeting','Live All Hands','Needs Alignment','Monthly Live-only team forum on the first Thursday of the month.','Prep cadence spans two weeks and needs alignment.'));
