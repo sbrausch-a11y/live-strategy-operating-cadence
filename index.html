@@ -171,7 +171,6 @@
           <div class="cal-grid" id="calGrid"></div>
         </div>
         <div class="drawer" id="drawer"><div class="drawer-head"><div><h3 id="drawerTitle">Select a calendar item</h3><p id="drawerSub">Details will appear here.</p></div><span id="drawerStatus" class="pill firm">Firm</span></div><div class="drawer-body"><p id="drawerDesc"></p><div class="info-list" id="drawerInfo"></div></div></div>
-        <div class="editable-note"><strong>Update note:</strong> calendar dates, cadence definitions, and status chips are driven by editable data objects in the HTML. The header timestamp updates automatically from the saved file timestamp after changes are committed. Make future date changes in the <span style="font-family:var(--mono)">calendarData</span> and <span style="font-family:var(--mono)">cadenceData</span> sections.</div>
       </div>
     </section>
 
@@ -194,7 +193,7 @@
       <div class="section-card key-grid">
         <div class="key-card"><h3>Altitude colors</h3><div class="key-list">
           <div class="key-row"><strong>Shareholders</strong><span>Gold. Earnings and external performance narrative.</span></div>
-          <div class="key-row"><strong>Board</strong><span>Yellow. Board materials, reviews, locks, and meetings.</span></div>
+          <div class="key-row"><strong>Board</strong><span>Yellow. Board materials requested, Core Submission, review / lock, and meetings.</span></div>
           <div class="key-row"><strong>Jamie / Core ELT</strong><span>Red. Core ELT visibility forums and related submissions.</span></div>
           <div class="key-row"><strong>Jordan / GMX</strong><span>Green. Decision, escalation, product, and GMX forums.</span></div>
           <div class="key-row"><strong>Ashish / Alex / Rahul</strong><span>Violet. Live-owned operating loops and team forums.</span></div>
@@ -214,7 +213,7 @@
   <script>
     /*
       EDITABLE DATA ZONE
-      Change cadenceData / calendarData below to keep this as a living document. v19 fix: Jamie WBR only suppresses on the actual Jamie MBR meeting week, not on MBR submission weeks.
+      Change cadenceData / calendarData below to keep this as a living document.
     */
     const cadenceData = {
       liveWbr: {
@@ -346,14 +345,14 @@
       },
       board: {
         title:'Board', type:'Board governance', owner:'GMX / Enterprise / Live input as needed', mode:'Disseminate', status:'Firm',
-        purpose:'Board governance cycle for materials, reviews, locks, and Board meeting moments that may create Live prep pressure.',
-        note:'Uses known Board-cycle dates as they stand in the calendar. Ideal-state Board prep can be added later.',
+        purpose:'Board governance cycle for formal materials, review / lock points, and Board meeting moments that may create Live prep pressure.',
+        note:'Calendar shows the de-duped Board chain: materials requested, Core Submission, review / lock, and meeting. Jamie-specific review steps are captured in the event details when relevant.',
         weeks:[{label:'Known Board cycle pattern', days:{
-          Mon:[{t:'Board cycle kickoff / ask', d:'Teams receive Board input needs when scheduled.', c:'core'}],
-          Tue:[{t:'Draft work', d:'Teams refine inputs and review open items.', c:'core'}],
-          Wed:[{t:'Content review / lock', d:'Known reviews and lock milestones typically land midweek.', c:'core'}],
-          Thu:[{t:'Board meeting / review', d:'Board or GMXLT review moments when scheduled.', c:'meeting'}],
-          Fri:[{t:'Core Submission', d:'Materials due when scheduled.', c:'core'}]
+          Mon:[{t:'Board Materials Requested', d:'Teams receive Board input needs when scheduled.', c:'core'}],
+          Tue:[{t:'Draft / review prep', d:'GMX / business owners refine content.', c:'core'}],
+          Wed:[{t:'Core Submission', d:'Formal materials deadline into the Board process.', c:'core'}],
+          Thu:[{t:'Board Review / Lock', d:'Leadership review or final lock of the Board packet.', c:'core'}],
+          Fri:[{t:'Board Meeting / follow-up', d:'Board forum or governance follow-ups as scheduled.', c:'meeting'}]
         }}]
       }
     };
@@ -387,10 +386,9 @@
     // Weekly WBR and Live Global WBR operating rhythms are generated below so the calendar stays editable.
     const baseCalendarData = {
       June:[
-        e(4,'Core Submission — Board','core','Board','Firm','Final Board materials due from GMX calendar.','Board governance milestone.'),
-        e(5,'Core Submission — Board / Jamie bullets','core','Board','Firm','June GMX Board materials due for Jamie bullets.','Board governance milestone.'),
-        e(17,'Board','meeting','Board','Firm','Board meeting date from GMX calendar.','Board governance milestone.'),
-        e(18,'Board','meeting','Board','Firm','Board meeting date from GMX calendar.','Board governance milestone.'),
+        e(4,'Core Submission — Board','core','Board','Firm','Final Board materials due from GMX calendar.','Includes Jamie-bullets prep as part of the Board package; not shown as a separate calendar milestone.'),
+        e(17,'Board Meeting','meeting','Board','Firm','Board meeting date from GMX calendar.','Board governance milestone.'),
+        e(18,'Board Meeting','meeting','Board','Firm','Board meeting date from GMX calendar.','Board governance milestone.'),
         e(3,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Product & Design prep model remains with Live Product.'),
         e(10,'Core Submission — MOSH Lite','core','MOSH Lite','Firm','Core Submission from GMX calendar.','Live involvement retained until confirmed otherwise.'),
         e(11,'Core Submission — June MBR','core','Jamie MBR','Firm','Submissions deadline: Thursday, June 11 @ 5:00 PM PST.','Scope: Q2 performance, data through May 31, 2026; report Q2 status vs. Q2 budget.'),
@@ -414,9 +412,9 @@
       ],
       August:[
         e(5,'Q2 2026 Earnings call','meeting','Earnings','Firm','Q2 2026 Earnings call.','Shareholder narrative milestone.'),
-        e(12,'Board GMXLT Kickoff','meeting','Board','Firm','September Board kickoff focused on business performance.','Board governance milestone.'),
-        e(26,'Core Submission — Board','core','Board','Firm','Board materials due for business performance.','Board governance milestone.'),
-        e(27,'Board GMXLT Content Review','meeting','Board','Firm','GMXLT content review with Jordan.','Board governance milestone.'),
+        e(12,'Board Review','meeting','Board','Firm','September Board kickoff focused on business performance.','Board review milestone.'),
+        e(26,'Core Submission — Board','core','Board','Firm','Board materials due for business performance.','Formal materials deadline into the Board process.'),
+        e(27,'Board Review / Lock','meeting','Board','Firm','GMXLT content review with Jordan.','Leadership review / lock point for the Board package.'),
         e(3,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Product & Design prep model remains with Live Product.'),
         e(12,'Core Submission — MOSH','core','MOSH','Firm','Core Submission from GMX calendar.','Materials due before the MOSH meeting.'),
         e(12,'Core Submission — MBR','core','Jamie MBR','Firm','Core Submission from GMX calendar.','Core Submission concludes at the Core Pre-Read Lock.'),
@@ -429,11 +427,10 @@
         e(25,'CEO Experience Review — Live','meeting','CEO Experience Review','Firm','Meeting date from GMX calendar.','Live-specific review.')
       ],
       September:[
-        e(9,'Board Strategy Final Review','meeting','Board','Firm','Board strategy final review with Jordan.','Board governance milestone.'),
-        e(9,'Core Submission — Board','core','Board','Firm','Final Board materials due.','Board governance milestone.'),
-        e(16,'Core Pre-Read Lock — Board','core','Board','Firm','Board materials locked.','Board governance milestone.'),
-        e(23,'Board','meeting','Board','Firm','Board meeting date from GMX calendar.','Board governance milestone.'),
-        e(24,'Board','meeting','Board','Firm','Board meeting date from GMX calendar.','Board governance milestone.'),
+        e(9,'Core Submission — Board','core','Board','Firm','Final Board materials due.','Includes strategy final review with Jordan as part of the same Board prep step.'),
+        e(16,'Core Pre-Read Lock — Board','core','Board','Firm','Board materials locked.','Official Board packet lock point.'),
+        e(23,'Board Meeting','meeting','Board','Firm','Board meeting date from GMX calendar.','Board governance milestone.'),
+        e(24,'Board Meeting','meeting','Board','Firm','Board meeting date from GMX calendar.','Board governance milestone.'),
         e(7,'Labor Day','holiday','Holiday','Firm','Holiday from GMX calendar.','Capacity constraint.'),
         e(16,'Core Submission — MOSH','core','MOSH','Firm','Core Submission from GMX calendar.','Materials due before the MOSH meeting.'),
         e(17,'Product & Design Review','meeting','Product & Design','Firm','Meeting date from GMX calendar.','Product & Design prep model remains with Live Product.'),
@@ -458,10 +455,9 @@
         e(29,'MBR','meeting','Jamie MBR','Firm','Meeting date from GMX calendar.','Core Submission and Core Pre-Read Lock are firm.')
       ],
       November:[
-        e(4,'Board Kickoff — Dec','meeting','Board','Firm','December Board kickoff from GMX calendar.','Board governance milestone.'),
-        e(4,'Board Materials Ask to Teams','core','Board','Firm','Board materials ask to teams.','Board governance milestone.'),
-        e(19,'HOLD: Board GMXLT Kickoff','meeting','Board','Needs Alignment','December Board kickoff hold; needs TBC.','Board governance milestone.'),
-        e(25,'HOLD: Board GMXLT Review','meeting','Board','Needs Alignment','December Board GMXLT review hold with Jordan.','Board governance milestone.'),
+        e(4,'Board Materials Requested','core','Board','Firm','Board materials ask to teams.','Includes December Board kickoff context; shown once to reduce duplicate Board prep milestones.'),
+        e(19,'HOLD: Board Review','meeting','Board','Needs Alignment','December Board kickoff hold; needs TBC.','Tentative Board review milestone.'),
+        e(25,'HOLD: Board Review / Lock','meeting','Board','Needs Alignment','December Board GMXLT review hold with Jordan.','Tentative leadership review / lock point for the Board package.'),
         e(12,'Core Submission — MOSH','core','MOSH','Firm','Core Submission from GMX calendar.','Materials due before the MOSH meeting.'),
         e(12,'Core Submission — MBR','core','Jamie MBR','Firm','Core Submission from GMX calendar.','Core Submission concludes at the Core Pre-Read Lock.'),
         e(13,'Live Refresh — MOSH','live','MOSH','Needs Alignment','Live Refresh target 48 hours before MOSH.','Separate target because MOSH deep-dive content may be net new.'),
@@ -473,8 +469,8 @@
         e(27,'Thanksgiving observed','holiday','Holiday','Firm','Holiday from GMX calendar.','Capacity constraint.')
       ],
       December:[
-        e(7,'Board call','meeting','Board','Firm','Board call date from GMX calendar.','Board governance milestone.'),
-        e(18,'Core Submission — Board','core','Board','Firm','Board materials due.','Board governance milestone.'),
+        e(7,'Board Meeting','meeting','Board','Firm','Board call date from GMX calendar.','Board governance milestone.'),
+        e(18,'Core Submission — Board','core','Board','Firm','Board materials due.','Formal materials deadline into the Board process.'),
         e(2,'Core Submission — MOSH','core','MOSH','Firm','Core Submission from GMX calendar.','Materials due before the MOSH meeting.'),
         e(2,'Core Submission — MBR','core','Jamie MBR','Firm','Core Submission from GMX calendar.','Core Submission concludes at the Core Pre-Read Lock.'),
         e(4,'Live Refresh — MOSH','live','MOSH','Needs Alignment','Live Refresh target 48 hours before MOSH.','Separate target because MOSH deep-dive content may be net new.'),
@@ -508,7 +504,7 @@
     function hasJamieWbrReplacement(month, day){
       const wk=weekKey(dateFor(month, day));
       return (baseCalendarData[month]||[]).some(ev => {
-        const isMbrMeeting = ev.cadence==='Jamie MBR' && ev.type==='meeting';
+        const isMbrMeeting = ev.cadence==='Jamie MBR' && (ev.title==='MBR' || ev.title==='June MBR' || ev.title.endsWith(' MBR'));
         return isMbrMeeting && weekKey(dateFor(month, ev.day))===wk;
       });
     }
