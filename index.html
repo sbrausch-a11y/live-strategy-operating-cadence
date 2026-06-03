@@ -171,7 +171,6 @@
           <div class="cal-grid" id="calGrid"></div>
         </div>
         <div class="drawer" id="drawer"><div class="drawer-head"><div><h3 id="drawerTitle">Select a calendar item</h3><p id="drawerSub">Details will appear here.</p></div><span id="drawerStatus" class="pill firm">Firm</span></div><div class="drawer-body"><p id="drawerDesc"></p><div class="info-list" id="drawerInfo"></div></div></div>
-        <div class="editable-note"><strong>Update note:</strong> calendar dates, cadence definitions, and status chips are driven by editable data objects in the HTML. The header timestamp updates automatically from the saved file timestamp after changes are committed. Make future date changes in the <span style="font-family:var(--mono)">calendarData</span> and <span style="font-family:var(--mono)">cadenceData</span> sections.</div>
       </div>
     </section>
 
@@ -214,7 +213,7 @@
   <script>
     /*
       EDITABLE DATA ZONE
-      Change cadenceData / calendarData below to keep this as a living document.
+      Change cadenceData / calendarData below to keep this as a living document. v19 fix: Jamie WBR only suppresses on the actual Jamie MBR meeting week, not on MBR submission weeks.
     */
     const cadenceData = {
       liveWbr: {
@@ -508,7 +507,7 @@
     function hasJamieWbrReplacement(month, day){
       const wk=weekKey(dateFor(month, day));
       return (baseCalendarData[month]||[]).some(ev => {
-        const isMbrMeeting = ev.cadence==='Jamie MBR' && (ev.title==='MBR' || ev.title==='June MBR' || ev.title.endsWith(' MBR'));
+        const isMbrMeeting = ev.cadence==='Jamie MBR' && ev.type==='meeting';
         return isMbrMeeting && weekKey(dateFor(month, ev.day))===wk;
       });
     }
