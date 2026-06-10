@@ -1,0 +1,10 @@
+{
+  "areas": {
+    "Strategy & Operations": { "owner": "Kanna", "requests": [] },
+    "Discovery": { "owner": "Ridhima", "requests": [] },
+    "Buyer Experience": { "owner": "Kate", "requests": [] },
+    "Seller Experience": { "owner": "Keshav", "requests": [] },
+    "Streaming & Moderation": { "owner": "Tim", "requests": [] },
+    "Trust & Safety": { "owner": "Laura", "requests": [] }
+  }
+}
